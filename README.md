@@ -8,6 +8,8 @@ There's a long way to go from a personal artwork to a mass produced product. Not
 
 In the **Projects** tab, there are two topics regarding current project development. Your thoughts and contribution will help to define the future of this cat, improve user experience and eventually benefit the public. 
 
+In the **Wiki** tab, there's a slow documenting process going on. 
+
 We just acquired our official domain: www.petoi.com. 
 
 New annoucements will be posted on Twitter: @T4Petoi. 
