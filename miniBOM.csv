@@ -1,0 +1,20 @@
+Item,Quantity,Notes,Examples
+TowerPro MG92B/MG91 Servo,9,digital metal gear servo. 1 backup/kit.,https://www.ebay.com/i/261725008698?chn=ps
+18650 Battery,2,for 80 minutes continuous walking. Should support high drain with protection circuit,https://www.ebay.com/itm/EBL-10x-18650-3-7V-3000mAh-Li-ion-Rechargeable-Batteries-For-Flashlight-Toys-/291757977769?_trksid=p2385738.m4383.l4275.c10
+Battery Holder,1,2 serial,"https://www.aliexpress.com/item/5pcs-lot-Plastic-Battery-Holder-Storage-Box-Case-for-2x18650-Battery-Holder/32635747407.html?spm=2114.search0104.3.9.76c62b45VoR3iM&ws_ab_test=searchweb0_0,searchweb201602_4_10065_10344_10068_10130_10324_10342_10547_10325_10343_10546_10340_10548_10341_10545_10084_10617_10083_10616_10618_10615_10307_5920012_10313_10059_10534_100031_10103_441_10624_442_10623_10622_10621_10620_10142,searchweb201603_25,ppcSwitch_3&algo_expid=ac81478a-1c41-41b4-a315-f7d67daf6f01-1&algo_pvid=ac81478a-1c41-41b4-a315-f7d67daf6f01&priceBeautifyAB=4"
+Slide switch,1,,https://www.ebay.com/itm/100pcs-SS12D00G4-SPDT-1P2T-2-Position-3-Pin-PCB-Panel-Vertical-Slide-Switch-TOGx/222949803944?epid=559567597&hash=item33e8d807a8:g:jrcAAOSwZ1BXegEr
+Arduino ProMini 5V16MHz,1,Any variation should work,https://www.ebay.com/itm/5Pcs-Atmega328P-Arduino-Pro-Mini-Module-5V-16MHz-1Pcs-FT232RL-FTDI-USB-TTL-USA/201997182612?hash=item2f07f86694:g:cTwAAOSwc2FZdqbW
+FTDI USB to TTL Adapter,1,for uploading sketch to Arduino,https://www.ebay.com/itm/FT232RL-3-3V-5-5V-FTDI-USB-to-TTL-Serial-Adapter-Modul-for-Arduino-Mini-Port-Hot-/152801620160?_trksid=p2349526.m4383.l4275.c1
+USB to Mini USB cable,1,connects FTDI adapter and USB on PC. longer cable are more convinient for testing,https://www.ebay.com/itm/Vention-Mini-USB-To-USB-Data-Charger-Cable-For-Camera-HDD-Cellphone-MP3-MP4-GPS/282403914771?hash=item41c095c413:m:m1iFahEBcbzwTmk7jDX0w9A
+PCA9685 16 channel Servo Driver,1,"there are two sizes, both are supported on my frame",https://www.ebay.com/p/Cjmcu-pca9685-16-Channel-PWM-Servo-Control-Module-12-Bit-FM-I2c/921632687?iid=122245365837&_trkparms=aid%3D222007%26algo%3DSIC.MBE%26ao%3D2%26asc%3D50543%26meid%3Df90e9013d48b457a9e29834d43b28229%26pid%3D100011%26rk%3D11%26rkt%3D12%26sd%3D152737281046%26itm%3D122245365837&_trksid=p2047675.c100011.m1850
+6DOF MPU-6050,1,,https://www.ebay.com/itm/GY-521-MPU-6050-6DOF-3Axis-Gyroscope-Accelerometer-Module-MPU6050-Arduino-Hot-/332440360557?_trksid=p2349526.m4383.l4275.c10
+Infrared Remote,1,I recomand to buy a seperate IR receiver with longer legs.,https://www.ebay.com/itm/IR-Wireless-Infrared-Remote-Control-Kit-For-Arduino-BeagleBone-Raspberry-Pi/322531050868?epid=917387085&hash=item4b18594574:g:4YoAAOSw42dZKIo3
+Buzzer,1,Both passive/active should work,https://www.ebay.com/itm/10pcs-5v-Active-Buzzer-Magnetic-Long-Continous-Beep-Tone-US-SHIPPING-M306/182700170241?epid=1974168483&hash=item2a89c75c01:g:bckAAOSwB-1Yq-IM
+3x16 (Right) Angle Pin,1,only 8 pwm are used on the mini,https://www.ebay.com/itm/3x40-Pin-2-54mm-Triple-Row-Straight-Male-Header-Right-angle-Black/301895025072?hash=item464a5881b0:g:8VYAAOSwv9hW4sRC
+Craft sticks,8,150mm x 18mm,https://www.ebay.com/itm/150-pieces-Jumbo-6-x-11-16-Craft-Sticks-Popsicle-Sticks-Tongue-Depressors/152606315456?hash=item23880b93c0:g:GS0AAOSw2q9a3NkS
+Spring,8,"9/32' x 3/4"" compression",https://www.ebay.com/itm/Compression-Extension-Springs-10-packs-5-32-to-3-8-Dia-1-2-x-3-1-8-L/131926336789?hash=item1eb76c2515:m:mLC4gtKs1N1atahP7JPr7tQ
+Screws,20,"M2 self tapping, 3~5mm length",https://www.ebay.com/itm/M1-M1-2-M1-4-M2-Phillips-Flat-Head-Self-Tapping-Wood-Screws-304-A2-70-Stainless/172225926046?hash=item281977139e:m:m-qXtP2FML6ejgBj0opiORg
+Frame,1,ABS filament,https://www.ebay.com/itm/3D-Printer-Filament-1kg-2-2lb-1-75mm-3mm-ABS-PLA-PETG-Wood-TPU-MakerBot-RepRap/261464565916?hash=item3ce080a89c:m:mGdS6-ino_Tv9AykDKgakaQ:sc:USPSPriority!27106!US!-1
+Toe,1,I was using TPE. I'm experimenting with rubber mold,
+,,,
+I'm still working on finalizing the model and building my team. I recommand you wait until I share the final design.,,,
