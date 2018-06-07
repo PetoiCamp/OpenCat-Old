@@ -12,6 +12,6 @@ In the **Wiki** tab, there's a slow documenting process going on.
 
 We just acquired our official domain: www.petoi.com. 
 
-New annoucements will be posted on Twitter: @T4Petoi. 
+New annoucements will be posted on Twitter: @PetoiCamp. 
 
 
