@@ -133,9 +133,9 @@ void meow(int repeat = 1, int pause = 200, int startF = 175,  int endF = 255, in
   }
 }
 
-#define KITTY
+#define NYBBLE
 
-#ifdef KITTY
+#ifdef NYBBLE
 #define HEAD
 #define TAIL
 #define X_LEG
