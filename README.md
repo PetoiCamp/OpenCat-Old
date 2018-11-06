@@ -1,5 +1,5 @@
 # OpenCat
-##News: Our crowdfunding campaign is live on igg.me/at/nybble!##
+**News: Our crowdfunding campaign is live on igg.me/at/nybble!**
 
 This is the repository for OpenCat project. 
 
