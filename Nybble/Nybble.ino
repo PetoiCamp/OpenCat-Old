@@ -29,7 +29,7 @@
 */
 #define MAIN_SKETCH
 #include <MemoryFree.h>
-#include "writeInstinct/OpenCat.h"
+#include "WriteInstinct/OpenCat.h"
 
 #include <I2Cdev.h>
 #include <MPU6050_6Axis_MotionApps20.h>
