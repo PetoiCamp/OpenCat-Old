@@ -28,11 +28,11 @@
   SOFTWARE.
 */
 #define MAIN_SKETCH
-#include "MemoryFree.h"
-#include "WriteInstinct/OpenCat.h"
+#include <MemoryFree.h>
+#include "writeInstinct/OpenCat.h"
 
-#include "I2Cdev.h"
-#include "MPU6050_6Axis_MotionApps20.h"
+#include <I2Cdev.h>
+#include <MPU6050_6Axis_MotionApps20.h>
 
 
 #define PACKET_SIZE 42
@@ -71,7 +71,7 @@ void dmpDataReady() {
 }
 
 // https://brainy-bits.com/blogs/tutorials/ir-remote-arduino
-#include "IRremote.h"
+#include <IRremote.h>
 
 /*-----( Declare objects )-----*/
 IRrecv irrecv(IR_RECIEVER);     // create instance of 'irrecv'
@@ -81,24 +81,24 @@ String translateIR() // takes action based on IR code received
 {
   switch (results.value) {
     //abbreviation of gaits      key on IR remote                gait/posture names
-    case 0xFFA25D: return (F("bd"));                                        //bound
-    case 0xFF629D: return (F("vt"));        //Serial.println(" FORWARD");   //stepping on spot, "mark time"
-    case 0xFFE21D: return (F("jp"));                                        //jump
+    case 0xFFA25D: return (F("sit"));                                        //sit
+    case 0xFF629D: return (F("d"));        //Serial.println(" FORWARD");   //shutdown all servos
+    case 0xFFE21D: return (F("buttUp"));                                        //butt up
 
-    case 0xFF22DD: return (F("rn"));       //Serial.println(" LEFT");      //sit
-    case 0xFF02FD: return (F("ly"));        //Serial.println(" -OK-");      //bound
-    case 0xFFC23D: return (F("balance"));   //Serial.println(" RIGHT");     //standing
+    case 0xFF22DD: return (F("cd1"));       //Serial.println(" LEFT");      //check down 1
+    case 0xFF02FD: return (F("balance"));        //Serial.println(" -OK-");      //neutral standing
+    case 0xFFC23D: return (F("pee"));   //Serial.println(" RIGHT");     //stand on three feet
 
-    case 0xFFE01F: return (F("wkF"));                                       //walk fast
-    case 0xFFA857: return (F("d"));         //Serial.println(" REVERSE");   //shut down servos
-    case 0xFF906F: return (F("cd1"));                                       //checkdown1
+    case 0xFFE01F: return (F("pu"));                                       //push up
+    case 0xFFA857: return (F("ly"));         //Serial.println(" REVERSE");   //lay down crawling
+    case 0xFF906F: return (F("str"));                                       //stretch
 
     case 0xFF6897: return (F("trL"));       //Serial.println(" 1");         //trot left
-    case 0xFF9867: return (F("tr"));        //Serial.println(" 2");         //trot
+    case 0xFF9867: return (F("rn"));        //Serial.println(" 2");         //trot fast/run
     case 0xFFB04F: return (F("trR"));       //Serial.println(" 3");         //trot right
 
     case 0xFF30CF: return (F("wkL"));       //Serial.println(" 4");         //walk left
-    case 0xFF18E7: return (F("wk"));        //Serial.println(" 5");         //walk
+    case 0xFF18E7: return (F("wkF"));        //Serial.println(" 5");         //walk fast
     case 0xFF7A85: return (F("wkR"));       //Serial.println(" 6");         //walk right
 
     case 0xFF10EF: return (F("crL"));       //Serial.println(" 7");         //crawl left
@@ -344,11 +344,14 @@ void setup() {
       //PTL(SERVOMIN + PWM_RANGE / 2 + float(middleShift(i) + servoCalibs[i]) * pulsePerDegree[i] * rotationDirection(i) );
       calibratedPWM(i, motion.dutyAngles[i]);
     }
-
+    randomSeed(analogRead(0));//use the fluctuation of voltage caused by servos as entropy pool
     shutServos();
     token = 'd';
   }
   beep(30);
+  delay(1000);
+  meow();
+
 }
 
 void loop() {
@@ -381,6 +384,14 @@ void loop() {
           else
             delay(20);
         }
+      }
+      else if (!strcmp(newCmd, "pu")) {
+        char **bList = new char*[2];
+        bList[0] = "pu1";
+        bList[1] = "pu2";
+        for (byte i = 0; i < 5; i++)
+          behavior(bList, 2);
+        meow();
       }
       else
         token = 'k';
@@ -495,7 +506,7 @@ void loop() {
       //      PT(token);
       //      PT(newCmd);
       //      PT("\n");
-      if (token == 'w'); //some words for undefined behaviors
+      if (token == 'w') {}; //some words for undefined behaviors
 
       if (token == 'k') { //validating key
 

@@ -13,7 +13,7 @@
     Behavior list (inherit from QList class) holds a time dependent sequence of multiple skills, triggered by certain perceptions.
     It defines the order, speed, repetition and interval of skills。
     (Behavior list is yet to be implemented)
-    
+
     Motion class uses the lookup information of a Skill to construct a Motion object that holds the actual angle array.
     It also implements the reading and writing functions in specific storage locations.
     Considering Arduino's limited SRAM, you should create only one Motion object and update it when loading new skills.
@@ -46,24 +46,6 @@
   September 2018
 
   Copyright (c) 2018 Petoi LLC.
-  
-  The MIT License
-
-  Permission is hereby granted, free of charge, to any person obtaining a copy
-  of this software and associated documentation files (the "Software"), to deal
-  in the Software without restriction, including without limitation the rights
-  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-  copies of the Software, and to permit persons to whom the Software is
-  furnished to do so, subject to the following conditions:
-  The above copyright notice and this permission notice shall be included in all
-  copies or substantial portions of the Software.
-  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-  SOFTWARE.
 
 */
 
@@ -121,7 +103,7 @@ void playMelody(int start) {
     beep(EEPROM.read(start - 1 - i), 1000 / EEPROM.read(start - 1 - len - i), 100);
 }
 
-void meow(int repeat = 1, int pause = 200, int startF = 175,  int endF = 255, int increment = 5) {
+void meow(int repeat = 1, int pause = 200, int startF = 175,  int endF = 250, int increment = 5) {
   for (int r = 0; r < repeat; r++) {
     for (int amp = startF; amp <= endF; amp += increment) {
       analogWrite(BUZZER, amp);
@@ -248,6 +230,12 @@ float radPerDeg = M_PI / 180;
 byte melody[] = {8, 13, 10, 13, 8,  0,  5,  8,  3,  5, 8,
                  8, 8,  32, 32, 8, 32, 32, 32, 32, 32, 8,
                 };
+/*byte pins[] = {16, 16, 16, 16,
+               16, 16, 16, 16,
+               2, 3, 13, 12,
+               0, 1, 15, 14
+              };*/
+//byte pins[] = {11, 12, 4, 16, 16, 16, 16, 16, 9,14,1,6,8,15,0,7};//tail version
 
 int8_t calibs[] = {0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0};
 int8_t middleShifts[] = {0, 15, 0, 0,
@@ -409,6 +397,7 @@ class Motion {
         expectedRollPitch[i] = pgm_read_byte(pgmAddress + 1 + i);
       byte frameSize = period > 1 ? WalkingDOF : 16;
       int len = period * frameSize;
+      //delete []dutyAngles; //check here
       dutyAngles = new char[len];
       for (int k = 0; k < len; k++) {
         dutyAngles[k] = pgm_read_byte(pgmAddress + SKILL_HEADER + k);
@@ -426,6 +415,7 @@ class Motion {
         expectedRollPitch[i] = Wire.read();
       byte frameSize = period > 1 ? WalkingDOF : 16;
       int len = period * frameSize;
+      //delete []dutyAngles;//check here
       dutyAngles = new char[len];
 
       int readFromEE = 0;
@@ -488,7 +478,9 @@ Motion motion;
 
 void assignSkillAddressToOnboardEeprom() {
   int skillAddressShift = 0;
-  PTL("\n* Assigning " + String(sizeof(progmemPointer) / 2) + " skill addresses...");
+  PT("\n* Assigning ");
+  PT(sizeof(progmemPointer) / 2);
+  PTL(" skill addresses...");
   for (byte s = 0; s < sizeof(progmemPointer) / 2; s++) { //save skill info to on-board EEPROM, load skills to SkillList
     PTL(s);
     byte nameLen = EEPROM.read(SKILLS + skillAddressShift++); //without last type character
@@ -554,22 +546,22 @@ inline int8_t servoCalib(byte idx) {
 }
 
 // balancing parameters
-#define ROLL_LEVEL_TOLERANCE 3 //the body is still considered as level, no angle adjustment
-#define PITCH_LEVEL_TOLERANCE 2
+#define ROLL_LEVEL_TOLERANCE 2 //the body is still considered as level, no angle adjustment
+#define PITCH_LEVEL_TOLERANCE 1
 byte levelTolerance[2] = {ROLL_LEVEL_TOLERANCE, PITCH_LEVEL_TOLERANCE};
 #define LARGE_PITCH 75
-//the following coefficients will be divided by 10 in the adjust() function. so (float) 0.1 can be saved as int8_t) 1
+//the following coefficients will be divided by 10.0 in the adjust() function. so (float) 0.1 can be saved as (int8_t) 1
 //this trick allows using int8_t array insead of float array, saving 96 bytes and allows storage on EEPROM
 #define panF 10
 #define tiltF 10
 #define sRF 50   //shoulder roll factor
 #define sPF 2 //shoulder pitch factor
-#define uRF 8 //upper leg roll factor
-#define uPF 8 //upper leg pitch factor
-#define lRF (-2*uRF) //lower leg roll factor 
-#define lPF (-uPF)//lower leg pitch factor
-#define LEFT_RIGHT_FACTOR 1.5
-#define POSTURE_WALKING_FACTOR 0.1
+#define uRF 5 //upper leg roll factor
+#define uPF 9 //upper leg pitch factor
+#define lRF (-1.5*uRF) //lower leg roll factor 
+#define lPF (-1.5*uPF)//lower leg pitch factor
+#define LEFT_RIGHT_FACTOR 2
+#define POSTURE_WALKING_FACTOR 0.2
 float postureOrWalkingFactor;
 
 #ifndef X_LEG // > > leg
@@ -661,7 +653,7 @@ void transform( char * target,  float speedRatio = 1, byte offset = 0) {
 void behavior(char** skill, int n) {
   for (byte i = 0; i < n; i++) {
     motion.loadBySkillName(skill[i]);
-    transform( motion.dutyAngles, 0.5);
+    transform( motion.dutyAngles, 2);
   }
 
 }
@@ -677,4 +669,9 @@ template <typename T> void printList(T * arr, byte len = DOF) {
     PT('\t');
   }
   PTL();
+}
+
+char getUserInput() {//limited to one character
+  while (!Serial.available());
+  return Serial.read();
 }
