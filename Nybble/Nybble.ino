@@ -343,6 +343,7 @@ void setup() {
       calibratedDuty0[i] =  SERVOMIN + PWM_RANGE / 2 + float(middleShift(i) + servoCalibs[i]) * pulsePerDegree[i]  * rotationDirection(i) ;
       //PTL(SERVOMIN + PWM_RANGE / 2 + float(middleShift(i) + servoCalibs[i]) * pulsePerDegree[i] * rotationDirection(i) );
       calibratedPWM(i, motion.dutyAngles[i]);
+      delay(50);
     }
     randomSeed(analogRead(0));//use the fluctuation of voltage caused by servos as entropy pool
     shutServos();
@@ -521,7 +522,7 @@ void loop() {
         firstWalkingJoint = (motion.period == 1) ? 0 : DOF - WalkingDOF;
         postureOrWalkingFactor = (motion.period == 1 ? 1 : POSTURE_WALKING_FACTOR);
         jointIdx = firstWalkingJoint;
-        transform( motion.dutyAngles,  2, firstWalkingJoint);
+        transform( motion.dutyAngles,  1, firstWalkingJoint);
 
         if (!strcmp(newCmd, "rest")) {
           shutServos();
