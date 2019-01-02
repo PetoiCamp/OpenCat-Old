@@ -682,7 +682,7 @@ pro.build.variant=eightanaloginputs
 
 ## Arduino Pro or Pro Mini (5V, 20 MHz) w/ ATmega328P
 ## --------------------------------------------------
-pro.menu.cpu.20MHzatmega328=ATmega328P (5V, 20 MHz)
+pro.menu.cpu.20MHzatmega328=ATmega328P (5V, 20 MHz) NyBoard
 
 pro.menu.cpu.20MHzatmega328.upload.maximum_size=30720
 pro.menu.cpu.20MHzatmega328.upload.maximum_data_size=2048
