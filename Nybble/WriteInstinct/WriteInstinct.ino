@@ -89,27 +89,27 @@ void saveSkillInfoFromProgmemToOnboardEeprom() {
 #endif
     skillAddressShift += 2; // one int (2 bytes) for address
   }
-  PTL("  ******************* Notice! ****************************");
+  PTLF("  ******************* Notice! ****************************");
   PTLF("    Maximal storage of onboard EEPROM is 1024 bytes.");
-  PT("\tInstinctive dictionary used ");
+  PTF("\tInstinctive dictionary used ");
   PT(SKILLS + skillAddressShift);
   PT(" bytes (");
   PT(float(100) * (SKILLS + skillAddressShift) / 1024);
-  PTL(" %)!");
+  PTLF(" %)!");
 #ifdef I2C_EEPROM
   if (choice == 'Y') {
     PTF("    Maximal storage of external I2C EEPROM is ");
     PT(EEPROM_SIZE);
-    PTL(" bytes.");
+    PTLF(" bytes.");
     PT("\tInstinctive data used ");
     PT(i2cEepromAddress);
     PT(" bytes (");
     PT(float(100)*i2cEepromAddress / EEPROM_SIZE);
-    PTL(" %)!");
+    PTLF(" %)!");
   }
 #endif
-  PTL("  ********************************************************");
-  PTL("Finished!");
+  PTLF("  ********************************************************");
+  PTLF("Finished!");
 }
 
 // the following MPU calibration codes are modified based on http://wired.chillibasket.com/2015/01/calibrating-mpu6050/
@@ -239,10 +239,10 @@ void setup() {
   beep(30);
 
   // start message
-  PTL("\ncalibrate MPU? (Y/n)");
+  PTLF("\ncalibrate MPU? (Y/n)");
   while (!Serial.available());
   choice = Serial.read();
-  PTL("Gotcha!");
+  PTLF("Gotcha!");
   if (choice == 'Y') {
     PTLF("\n* MPU6050 Calibration Routine");
     delay(2000);

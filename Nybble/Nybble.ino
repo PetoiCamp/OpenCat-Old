@@ -79,35 +79,36 @@ decode_results results;      // create instance of 'decode_results'
 String translateIR() // takes action based on IR code received
 // describing Remote IR codes.
 {
-  switch (results.value) {
-    //abbreviation of gaits      key on IR remote                gait/posture names
-    case 0xFFA25D: return (F("sit"));                                        //sit
-    case 0xFF629D: return (F("d"));        //Serial.println(" FORWARD");   //shutdown all servos
-    case 0xFFE21D: return (F("buttUp"));                                        //butt up
+  switch (results.value) { //why the program is printing the IR key twice? //Rz's note
+    //IR signal    key on IR remote       //abbreviation of gaits   //gait/posture names
+    case 0xFFA25D: PTLF(" CH-");          return (F("sit"));
+    case 0xFF629D: PTLF(" CH");           return (F("d"));          //shutdown all servos
+    case 0xFFE21D: PTLF(" CH+");          return (F("balance"));    //neutral standing
 
-    case 0xFF22DD: return (F("cd1"));       //Serial.println(" LEFT");      //check down 1
-    case 0xFF02FD: return (F("balance"));        //Serial.println(" -OK-");      //neutral standing
-    case 0xFFC23D: return (F("pee"));   //Serial.println(" RIGHT");     //stand on three feet
 
-    case 0xFFE01F: return (F("pu"));                                       //push up
-    case 0xFFA857: return (F("ly"));         //Serial.println(" REVERSE");   //lay down crawling
-    case 0xFF906F: return (F("str"));                                       //stretch
+    case 0xFF22DD: PTLF(" |<<");          return (F("rc"));         //recover (turtle roll )
+    case 0xFF02FD: PTLF(" >>|");          return (F("pu"));         // push up
+    case 0xFFC23D: PTLF(" >||");          return (F("str"));        //stretch
 
-    case 0xFF6897: return (F("trL"));       //Serial.println(" 1");         //trot left
-    case 0xFF9867: return (F("rn"));        //Serial.println(" 2");         //trot fast/run
-    case 0xFFB04F: return (F("trR"));       //Serial.println(" 3");         //trot right
+    case 0xFFE01F: PTLF(" -");            return (F("buttUp"));     //butt up
+    case 0xFFA857: PTLF(" +");            return (F("ly"));         //lay down crawling
+    case 0xFF906F: PTLF(" EQ");           return (F("pee"));        //stand on three feet
 
-    case 0xFF30CF: return (F("wkL"));       //Serial.println(" 4");         //walk left
-    case 0xFF18E7: return (F("wkF"));        //Serial.println(" 5");         //walk fast
-    case 0xFF7A85: return (F("wkR"));       //Serial.println(" 6");         //walk right
+    case 0xFF6897: PTLF(" 0");            return (F("trL"));        //trot left
+    case 0xFF9867: PTLF(" 100+");         return (F("tr"));         //trot fast/run
+    case 0xFFB04F: PTLF(" 200+");         return (F("trR"));        //trot right
 
-    case 0xFF10EF: return (F("crL"));       //Serial.println(" 7");         //crawl left
-    case 0xFF38C7: return (F("cr"));        //Serial.println(" 8");         //crawl
-    case 0xFF5AA5: return (F("crR"));       //Serial.println(" 9");         //crawl right
+    case 0xFF30CF: PTLF(" 1");            return (F("crL"));        //crawl left
+    case 0xFF18E7: PTLF(" 2");            return (F("cr"));         //crawl fast
+    case 0xFF7A85: PTLF(" 3");            return (F("crR"));        //crawl right
 
-    case 0xFF42BD: return (F("bkL"));       //Serial.println(" *");         //back left
-    case 0xFF4AB5: return (F("bk"));        //Serial.println(" 0");         //back
-    case 0xFF52AD: return (F("bkR"));       //Serial.println(" #");         //back right
+    case 0xFF10EF: PTLF(" 4");            return (F("bkL"));        // back left
+    case 0xFF38C7: PTLF(" 5");            return (F("bk"));         //back
+    case 0xFF5AA5: PTLF(" 6");            return (F("bkR"));        //back right
+
+    case 0xFF42BD: PTLF(" 7");            return (F("calib"));      //calibration posture
+    case 0xFF4AB5: PTLF(" 8");            return (F("zero"));       //customed skill
+    case 0xFF52AD: PTLF(" 9");            return (F("zero"));       //customed skill
 
     case 0xFFFFFFFF: return (""); //Serial.println(" REPEAT");
 
@@ -258,16 +259,16 @@ void setup() {
   while (Serial.available() && Serial.read()); // empty buffer
   delay(100);
   PTLF("\n* Starting *");
-  do {
-    PTLF("Initializing I2C");
-    mpu.initialize();
+  PTLF("Initializing I2C");
+  do
+  {
     PTLF("Connecting MPU6050...");
-    delay(500);
+    mpu.initialize();
+    delay(2000);
+    // verify connection
+    PTLF("Testing connections...");
+    PTL(mpu.testConnection() ? F("MPU successful") : F("MPU failed"));
   } while (!mpu.testConnection());
-
-  // verify connection
-  PTLF("Testing connections...");
-  PTL(mpu.testConnection() ? F("MPU successful") : F("MPU failed"));
 
   // load and configure the DMP
   do {
@@ -314,11 +315,11 @@ void setup() {
   } while (devStatus);
 
   //opening music
-  /*#if WalkingDOF == 8
-    pinMode(BUZZER, OUTPUT);
-    playMelody(MELODY);
-    #endif
-  */
+#if WalkingDOF == 8
+  pinMode(BUZZER, OUTPUT);
+  playMelody(MELODY);
+#endif
+
   //IR
   {
     //PTLF("IR Receiver Button Decode");
@@ -337,25 +338,58 @@ void setup() {
     //meow();
     strcpy(lastCmd, "rest");
     motion.loadBySkillName("rest");
-    for (byte i = 0; i < DOF; i++) {
+    for (int8_t i = DOF - 1; i >= 0; i--) {
       pulsePerDegree[i] = float(PWM_RANGE) / servoAngleRange(i);
       servoCalibs[i] = servoCalib(i);
       calibratedDuty0[i] =  SERVOMIN + PWM_RANGE / 2 + float(middleShift(i) + servoCalibs[i]) * pulsePerDegree[i]  * rotationDirection(i) ;
       //PTL(SERVOMIN + PWM_RANGE / 2 + float(middleShift(i) + servoCalibs[i]) * pulsePerDegree[i] * rotationDirection(i) );
       calibratedPWM(i, motion.dutyAngles[i]);
-      delay(50);
+      delay(100);
     }
     randomSeed(analogRead(0));//use the fluctuation of voltage caused by servos as entropy pool
     shutServos();
     token = 'd';
   }
   beep(30);
-  delay(1000);
-  meow();
 
+  pinMode(BATT, INPUT);
+  pinMode(VCC, OUTPUT);
+  pinMode(TRIGGER, OUTPUT); // Sets the trigPin as an Output
+  pinMode(ECHO, INPUT); // Sets the echoPin as an Input
+  digitalWrite(VCC, HIGH);
+  int t = 0;
+  int minDist, maxDist;
+  while (0) {//disabled for now. needs virtual threading to reduce lag in motion.
+    calibratedPWM(0, -10 * cos(t++*M_PI / 360));
+    calibratedPWM(1, 10 * sin(t++ * 2 * M_PI / 360));
+    digitalWrite(TRIGGER, LOW);
+    delayMicroseconds(2);
+
+    // Sets the trigPin on HIGH state for 10 micro seconds
+    digitalWrite(TRIGGER, HIGH);
+    digitalWrite(BUZZER, HIGH);
+    delayMicroseconds(10);
+    digitalWrite(TRIGGER, LOW);
+    digitalWrite(BUZZER, LOW);
+
+    // Reads the echoPin, returns the sound wave travel time in microseconds
+
+    long duration = pulseIn(ECHO, HIGH, farTime);
+
+    // Calculating the distance
+
+    int distance = duration * 0.034 / 2; // 10^-6 * 34000 cm/s
+
+    // Prints the distance on the Serial Monitor
+    Serial.print("Distance: ");
+    Serial.print(distance == 0 ? LONGEST_DISTANCE : distance);
+    Serial.println(" cm");
+  }
+  meow();
 }
 
 void loop() {
+
   newCmd[0] = '\0';
   newCmdIdx = 0;
   // MPU block
@@ -363,7 +397,9 @@ void loop() {
   checkBodyMotion();
 #endif
   // accident block
-
+  //...
+  //...
+  //for obstacle avoidance and auto recovery
 
   // input block
   //else if (t == 0) {
@@ -372,27 +408,35 @@ void loop() {
       strcpy(newCmd, translateIR().c_str());
       if (!strcmp(newCmd, "d"))
         token = 'd';
-      else if (!strcmp(newCmd, "tail")) {
-        for (byte i = 0; i < 30; i++)
-          calibratedPWM(2, -3 * i);
-        delay(20);
-      }
-      else if (!strcmp(newCmd, "tailS")) {
-        for (byte i = 0; i < 120; i++) {
-          calibratedPWM(2, 30 * cos(2 * M_PI * i / 30));
-          if (i % 15 == 0)
-            delay(500);
-          else
-            delay(20);
-        }
+      else if (!strcmp(newCmd, "rc")) {
+        char **bList = new char*[10];
+        bList[0] = "rc1";
+        bList[1] = "rc2";
+        bList[2] = "rc3";
+        bList[3] = "rc4";
+        bList[4] = "rc5";
+        bList[5] = "rc6";
+        bList[6] = "rc7";
+        bList[7] = "rc8";
+        bList[8] = "rc9";
+        bList[9] = "rc10";
+        float speedRatio[10] = {2, 2, 2, 10, 5, 10, 5, 5, 5, 2};
+        int pause[10] = {500, 500, 500, 0, 0, 0, 0, 0, 500, 100};
+        behavior( 10, bList, speedRatio, pause);
+        strcpy(newCmd, "rest");
+
       }
       else if (!strcmp(newCmd, "pu")) {
         char **bList = new char*[2];
         bList[0] = "pu1";
         bList[1] = "pu2";
-        for (byte i = 0; i < 5; i++)
-          behavior(bList, 2);
+        float speedRatio[2] = {2, 2};
+        int pause[2] = {0, 0};
+        for (byte i = 0; i < 3; i++)
+          behavior(2, bList, speedRatio, pause);
+        strcpy(newCmd, "rest");
         meow();
+
       }
       else
         token = 'k';
@@ -567,6 +611,7 @@ void loop() {
 
       if (jointIdx == DOF) {
         jointIdx = 0;
+        //PTL((float)analogRead(BATT) *  5.0 / 1024.0*3);
 #ifdef SKIP
         if (updateFrame++ == SKIP) {
           updateFrame = 0;

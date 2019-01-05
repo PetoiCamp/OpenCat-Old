@@ -89,11 +89,14 @@
 #define BUZZER 5
 #define GYRO
 #define ULTRA_SOUND
+#define BATT A0
 
 #ifdef ULTRA_SOUND
-#define VCC 7
-#define TRIGGER 6
-#define ECHO 3
+#define VCC 8
+#define TRIGGER 9
+#define ECHO 10
+#define LONGEST_DISTANCE 200 // 200 cm = 2 meters
+float farTime =  LONGEST_DISTANCE*2/0.034;
 #endif
 
 void beep(byte note, float duration = 10, int pause = 0, byte repeat = 1 ) {
@@ -121,11 +124,11 @@ void playMelody(int start) {
     beep(EEPROM.read(start - 1 - i), 1000 / EEPROM.read(start - 1 - len - i), 100);
 }
 
-void meow(int repeat = 1, int pause = 200, int startF = 175,  int endF = 250, int increment = 5) {
+void meow(int repeat = 1, int pause = 200, int startF = 50,  int endF = 200, int increment = 5) {
   for (int r = 0; r < repeat; r++) {
     for (int amp = startF; amp <= endF; amp += increment) {
       analogWrite(BUZZER, amp);
-      delay(30); // wait for 30 milliseconds to allow the buzzer to vibrate
+      delay(15); // wait for 15 milliseconds to allow the buzzer to vibrate
     }
     delay(500);
     analogWrite(BUZZER, 0);
@@ -579,7 +582,7 @@ byte levelTolerance[2] = {ROLL_LEVEL_TOLERANCE, PITCH_LEVEL_TOLERANCE};
 #define lRF (-1.5*uRF) //lower leg roll factor 
 #define lPF (-1.5*uPF)//lower leg pitch factor
 #define LEFT_RIGHT_FACTOR 2
-#define POSTURE_WALKING_FACTOR 0.2
+#define POSTURE_WALKING_FACTOR 0.5
 float postureOrWalkingFactor;
 
 #ifndef X_LEG // > > leg
@@ -639,14 +642,14 @@ void calibratedPWM(byte i, float angle) {
 }
 
 void allCalibratedPWM(char * dutyAng) {
-  for (byte i = 0; i < DOF; i++) {
+  for (int8_t i = DOF-1; i >=0; i--) {
     calibratedPWM(i, dutyAng[i]);
   }
 }
 
 void shutServos() {
   delay(100);
-  for (byte i = 0; i < DOF; i++) {
+  for (int8_t i = DOF-1; i >=0; i--) {
     pwm.setPWM(i, 0, 4096);
   }
 }
@@ -668,10 +671,11 @@ void transform( char * target,  float speedRatio = 1, byte offset = 0) {
   //  PTL();
 }
 
-void behavior(char** skill, int n) {
+void behavior(int n, char** skill, float *speedRatio,int *pause) {
   for (byte i = 0; i < n; i++) {
     motion.loadBySkillName(skill[i]);
-    transform( motion.dutyAngles, 2);
+    transform( motion.dutyAngles, speedRatio[i]);
+    delay(pause[i]);
   }
 
 }
