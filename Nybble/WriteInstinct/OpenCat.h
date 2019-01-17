@@ -144,9 +144,9 @@ void meow(int repeat = 1, int pause = 200, int startF = 50,  int endF = 200, int
 #define X_LEG
 
 byte pins[] = {7, 0, 8, 15,
-               6, 1, 12, 11,
+               6, 1, 14, 9,
                5, 2, 13, 10,
-               4, 3, 14, 9
+               4, 3, 12, 11
               };
 
 #else

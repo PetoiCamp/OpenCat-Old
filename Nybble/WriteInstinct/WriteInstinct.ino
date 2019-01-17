@@ -245,10 +245,10 @@ void setup() {
   PTLF("Gotcha!");
   if (choice == 'Y') {
     PTLF("\n* MPU6050 Calibration Routine");
-    delay(2000);
+    delay(1000);
     // verify connection
     PTL(mpu.testConnection() ? "MPU6050 connection successful" : "MPU6050 connection failed");
-    delay(1000);
+    delay(2000);
     // reset offsets
     mpu.setXAccelOffset(0);
     mpu.setYAccelOffset(0);
@@ -551,6 +551,11 @@ void calibration() {
         PT('.');
         agOffset[i] -= (agMean[i] - (i == 2 ? 16384 : 0)) / (tolerance == 1 ? 3 : tolerance);
       }
+    }
+    PTL();
+    for (int i = 0; i < 6; i++) {
+      PT(agOffset[i]);
+      PT("\t");
     }
     PTL();
     /*  //replacing the following codes

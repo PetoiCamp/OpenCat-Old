@@ -260,15 +260,15 @@ void setup() {
   delay(100);
   PTLF("\n* Starting *");
   PTLF("Initializing I2C");
-  do
+  PTLF("Connecting MPU6050...");
+  mpu.initialize();
+  //do
   {
-    PTLF("Connecting MPU6050...");
-    mpu.initialize();
-    delay(2000);
+    delay(1000);
     // verify connection
     PTLF("Testing connections...");
-    PTL(mpu.testConnection() ? F("MPU successful") : F("MPU failed"));
-  } while (!mpu.testConnection());
+    PTL(mpu.testConnection() ? F("MPU successful") : F("MPU failed"));//sometimes it shows "failed" but is ok to bypass.
+  } //while (!mpu.testConnection());
 
   // load and configure the DMP
   do {
