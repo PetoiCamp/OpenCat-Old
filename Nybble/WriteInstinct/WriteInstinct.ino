@@ -402,8 +402,8 @@ void loop() {
       if (token == 'k') { //validating key
         motion.loadBySkillName(cmd);
         //motion.info();
-        PTF("free memory: ");
-        PTL(freeMemory());
+        //PTF("free memory: ");
+        //PTL(freeMemory());
         timer = 0;
         if (strcmp(cmd, "balance") && strcmp(cmd, "lifted") && strcmp(cmd, "dropped") )
           strcpy(lastCmd, cmd);
