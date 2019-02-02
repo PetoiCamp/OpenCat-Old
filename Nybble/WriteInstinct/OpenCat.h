@@ -68,7 +68,7 @@
 */
 
 #include "Instinct.h" //postures and movements trained by RongzhongLi
-//#include "MemoryFree.h" //http://playground.arduino.cc/Code/AvailableMemory
+//#include <MemoryFree.h> //http://playground.arduino.cc/Code/AvailableMemory
 #include <QList.h> //https://github.com/SloCompTech/QList
 
 // credit to Adafruit PWM servo driver library

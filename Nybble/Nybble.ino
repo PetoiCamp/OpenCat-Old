@@ -28,7 +28,6 @@
   SOFTWARE.
 */
 #define MAIN_SKETCH
-#include <MemoryFree.h>
 #include "WriteInstinct/OpenCat.h"
 
 #include <I2Cdev.h>
