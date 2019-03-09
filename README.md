@@ -9,6 +9,6 @@ In the **Wiki** tab, there's a slow documenting process going on.
 
 We just acquired our official domain: www.petoi.com. You can subscribe for our official newsletters.
 
-Random updates will be posted on Twitter @PetoiCamp, Instagram @Petoi_Camp, and [YouTube channel](https://www.youtube.com/c/rongzhongli)
+Random updates will be posted on Twitter [@PetoiCamp](https://twitter.com/petoicamp), Instagram [@Petoi_Camp](https://www.instagram.com/petoi_camp/), and [YouTube channel](https://www.youtube.com/c/rongzhongli)
 
 
