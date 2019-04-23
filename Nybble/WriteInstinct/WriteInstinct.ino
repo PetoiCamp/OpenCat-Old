@@ -11,7 +11,7 @@
     Copyright (c) 2018 Petoi LLC.
 
    The MIT License
-   
+
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to deal
   in the Software without restriction, including without limitation the rights
@@ -210,11 +210,13 @@ void setup() {
     PT("\t");
     }
     PTL();*/
+  beep(100, 50);
   // initialize device
   mpu.initialize();
 
   // wait for ready
   while (Serial.available() && Serial.read()); // empty buffer
+  PTLF("\n* Change the \"V0_1\" in \"#define NyBoard_V0_1\" in Instinct.h according to your NyBoard version!");
   PTLF("\n* OpenCat Writing Constants to EEPROM...");
   writeConst(); // only run for the first time when writing to the board.
   beep(30);
@@ -237,9 +239,8 @@ void setup() {
     token = 'd';
   }
   beep(30);
-
   // start message
-  PTLF("\ncalibrate MPU? (Y/n)");
+  PTLF("\nCalibrate MPU? (Y/n)");
   while (!Serial.available());
   choice = Serial.read();
   PTLF("Gotcha!");
@@ -247,7 +248,7 @@ void setup() {
     PTLF("\n* MPU6050 Calibration Routine");
     delay(1000);
     // verify connection
-    PTL(mpu.testConnection() ? "MPU6050 connection successful" : "MPU6050 connection failed");
+    PTL(mpu.testConnection() ? F("MPU6050 connection successful") : F("MPU6050 connection failed (sometimes it shows \"failed\" but is ok to bypass."));
     delay(2000);
     // reset offsets
     mpu.setXAccelOffset(0);
@@ -324,7 +325,7 @@ void loop() {
 
     else if (token == 'd' ) {
       motion.loadBySkillName("rest");
-      transform(motion.dutyAngles);
+      transform(motion.dutyAngles, 0.5);
       PTLF("shut down servos");
       shutServos();
     }
@@ -357,7 +358,7 @@ void loop() {
         //PTLF("calibrating [ targetIdx, angle ]: ");
         if (strcmp(lastCmd, "c")) { //first time entering the calibration function
           motion.loadBySkillName("calib");
-          transform(motion.dutyAngles);
+          transform(motion.dutyAngles, 0.5);
           shutServos();
         }
         if (inLen == 2)
@@ -402,17 +403,19 @@ void loop() {
       if (token == 'k') { //validating key
         motion.loadBySkillName(cmd);
         //motion.info();
-        //PTF("free memory: ");
-        //PTL(freeMemory());
+#ifdef DEVELOPER
+        PTF("free memory: ");
+        PTL(freeMemory());
+#endif
         timer = 0;
         if (strcmp(cmd, "balance") && strcmp(cmd, "lifted") && strcmp(cmd, "dropped") )
           strcpy(lastCmd, cmd);
         // if posture, start jointIdx from 0
         // if gait, walking DOF = 8, start jointIdx from 8
         //          walking DOF = 12, start jointIdx from 4
-        firstValidJoint = (motion.period == 1) ? 0 : DOF - WalkingDOF;
+        firstValidJoint = (motion.period == 1) ? 0 : DOF - WALKING_DOF;
         jointIdx = firstValidJoint;
-        transform( motion.dutyAngles, firstValidJoint, 2);
+        transform( motion.dutyAngles, 1, firstValidJoint);
         if (!strcmp(cmd, "rest")) {
           shutServos();
           token = 'd';
@@ -448,11 +451,11 @@ void loop() {
           jointIdx = 4;
 
       }
-#if WalkingDOF==8 //skip shoulder roll 
+#if WALKING_DOF==8 //skip shoulder roll 
       if (jointIdx == 4)
         jointIdx = 8;
 #endif
-      int dutyIdx = timer * WalkingDOF + jointIdx - firstValidJoint;
+      int dutyIdx = timer * WALKING_DOF + jointIdx - firstValidJoint;
       calibratedPWM(jointIdx, motion.dutyAngles[dutyIdx] );
       jointIdx++;
 

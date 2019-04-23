@@ -1,0 +1,17 @@
+-------------------------
+Update History
+Apr.22nd, 2019
+
+Nybble.ino
+- Added offsetLR and related logic to let Nybble look around when walking and turning
+- Added battery voltage reading at the beginning of loop().
+  If the voltage drops below certain value, the program will pause by meow() to recharges the capacitor.
+  It will reduce the abnormal rotation of servos and chances of board reset.
+- Redefined the key map of infrared remote.
+
+OpenCat.h
+- Added preprocessor #DEVELOPER to hide some detailed debugging information and libraries.
+- Moved "#define NYBBLE" from OpenCat.h to Instinct.h 
+- Changed yprLag from int8_t (angles) to float (radian) to reduce calculations for degree/radian conversion
+- Changed RollPitchDeviation from int8_t (angles) to float (radian).
+- Changed the type of adaptiveParameterArray from float to int8_t. Adjusted values.

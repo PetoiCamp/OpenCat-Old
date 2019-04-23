@@ -45,7 +45,7 @@
   Rongzhong Li
   September 2018
 
-  Copyright (c) 2018 Petoi LLC.
+  Copyright (c) 2019 Petoi LLC.
 
   The MIT License
 
@@ -68,8 +68,11 @@
 */
 
 #include "Instinct.h" //postures and movements trained by RongzhongLi
-//#include <MemoryFree.h> //http://playground.arduino.cc/Code/AvailableMemory
+//#define DEVELOPER
+#ifdef DEVELOPER
+#include <MemoryFree.h> //http://playground.arduino.cc/Code/AvailableMemory
 #include <QList.h> //https://github.com/SloCompTech/QList
+#endif
 
 // credit to Adafruit PWM servo driver library
 #include <Wire.h>
@@ -83,7 +86,6 @@
 #define PTF(s) Serial.print(F(s))//trade flash memory for dynamic memory with F() function
 #define PTLF(s) Serial.println(F(s))
 
-
 //board configuration
 #define IR_RECIEVER 4 // Signal Pin of IR receiver to Arduino Digital Pin 4
 #define BUZZER 5
@@ -96,7 +98,7 @@
 #define TRIGGER 9
 #define ECHO 10
 #define LONGEST_DISTANCE 200 // 200 cm = 2 meters
-float farTime =  LONGEST_DISTANCE*2/0.034;
+float farTime =  LONGEST_DISTANCE * 2 / 0.034;
 #endif
 
 void beep(byte note, float duration = 10, int pause = 0, byte repeat = 1 ) {
@@ -136,35 +138,33 @@ void meow(int repeat = 1, int pause = 200, int startF = 50,  int endF = 200, int
   }
 }
 
-#define NYBBLE
-
-#ifdef NYBBLE
-#define HEAD
-#define TAIL
-#define X_LEG
-
+#ifdef NyBoard_V0_1
 byte pins[] = {7, 0, 8, 15,
                6, 1, 14, 9,
                5, 2, 13, 10,
                4, 3, 12, 11
               };
-
 #else
-#ifdef TINY
-#define MPU_YAW180
-
-byte pins[] = {16, 16, 16, 16,
-               16, 16, 16, 16,
-               5, 4,  10, 11,
-               7, 6,  12, 13
-              };
-#else
-#define KUDO
-byte pins[] = {16, 16, 16, 16,
-               16, 16, 16, 16,
+#ifdef NyBoard_V0_2
+byte pins[] = {4, 3, 11, 12,
+               5, 2, 13, 10,
                6, 1, 14, 9,
                7, 0, 15, 8
               };
+#endif
+#endif
+
+#ifdef NYBBLE
+#define HEAD
+#define TAIL
+#define X_LEG
+#define WALKING_DOF 8
+
+#else
+#ifdef BIT
+//#define MPU_YAW180
+#define LL_LEG
+#define WALKING_DOF 8
 #endif
 #endif
 //remap pins for different walking modes, pin4 ~ pin15
@@ -315,7 +315,7 @@ int EEPROMReadInt(int p_address)
 bool EEPROMOverflow = false;
 void copyDataFromPgmToI2cEeprom(unsigned int &eeAddress, unsigned int pgmAddress) {
   uint8_t period = pgm_read_byte(pgmAddress);//automatically cast to char*
-  byte frameSize = period > 1 ? WalkingDOF : 16;
+  byte frameSize = period > 1 ? WALKING_DOF : 16;
   int len = period * frameSize + SKILL_HEADER;
   int writtenToEE = 0;
   while (len > 0) {
@@ -384,7 +384,7 @@ class Motion {
   public:
     byte pins[DOF];
     uint8_t period;
-    int8_t expectedRollPitch[2];
+    float expectedRollPitch[2];
     char* dutyAngles;
     Motion() {
       period = 0;
@@ -415,8 +415,8 @@ class Motion {
     void loadDataFromProgmem(unsigned int pgmAddress) {
       period = pgm_read_byte(pgmAddress);//automatically cast to char*
       for (int i = 0; i < 2; i++)
-        expectedRollPitch[i] = pgm_read_byte(pgmAddress + 1 + i);
-      byte frameSize = period > 1 ? WalkingDOF : 16;
+        expectedRollPitch[i] = radPerDeg * (int8_t)pgm_read_byte(pgmAddress + 1 + i);
+      byte frameSize = period > 1 ? WALKING_DOF : 16;
       int len = period * frameSize;
       //delete []dutyAngles; //check here
       dutyAngles = new char[len];
@@ -433,8 +433,8 @@ class Motion {
       period = Wire.read();
       //PTL("read " + String(period) + " frames");
       for (int i = 0; i < 2; i++)
-        expectedRollPitch[i] = Wire.read();
-      byte frameSize = period > 1 ? WalkingDOF : 16;
+        expectedRollPitch[i] = radPerDeg * (int8_t)Wire.read();
+      byte frameSize = period > 1 ? WALKING_DOF : 16;
       int len = period * frameSize;
       //delete []dutyAngles;//check here
       dutyAngles = new char[len];
@@ -459,8 +459,10 @@ class Motion {
       char skillType = EEPROM.read(onBoardEepromAddress);
       unsigned int dataArrayAddress = EEPROMReadInt(onBoardEepromAddress + 1);
       delete[] dutyAngles;
-      /*PTF("free memory: ");
-        PTL(freeMemory());*/
+#ifdef DEVELOPER
+      PTF("free memory: ");
+      PTL(freeMemory());
+#endif
 #ifdef I2C_EEPROM
       if (skillType == 'I') { //copy instinct data array from external i2c eeprom
         loadDataFromI2cEeprom(dataArrayAddress);
@@ -470,8 +472,10 @@ class Motion {
       {
         loadDataFromProgmem(dataArrayAddress) ;
       }
-      /*PTF("free memory: ");
-        PTL(freeMemory());*/
+#ifdef DEVELOPER
+      PTF("free memory: ");
+      PTL(freeMemory());
+#endif
     }
 
     void loadBySkillName(char* skillName) {//get lookup information from on-board EEPROM and read the data array from storage
@@ -487,8 +491,8 @@ class Motion {
     */
 
     void info() {
-      PTL("period: " + String(period) + ",\tdelayBetweenFrames: " + ",\texpected (pitch,roll): (" + expectedRollPitch[0] + "," + expectedRollPitch[1] + ")");
-      for (int k = 0; k < period * (period > 1 ? WalkingDOF : 16); k++) {
+      PTL("period: " + String(period) + ",\tdelayBetweenFrames: " + ",\texpected (pitch,roll): (" + expectedRollPitch[0]*degPerRad + "," + expectedRollPitch[1]*degPerRad + ")");
+      for (int k = 0; k < period * (period > 1 ? WALKING_DOF : 16); k++) {
         PT(String((int8_t)dutyAngles[k]) + ", ");
       }
       PTL();
@@ -542,7 +546,9 @@ void assignSkillAddressToOnboardEeprom() {
       EEPROMWriteInt(SKILLS + skillAddressShift, progmemPointer[s]);
     skillAddressShift += 2;
     delete[] skillName;
+  #ifdef DEVELOPER
     Serial.println(freeMemory());
+  #endif
   }
   }
 */
@@ -567,61 +573,71 @@ inline int8_t servoCalib(byte idx) {
 }
 
 // balancing parameters
-#define ROLL_LEVEL_TOLERANCE 2 //the body is still considered as level, no angle adjustment
+#define ROLL_LEVEL_TOLERANCE 2//the body is still considered as level, no angle adjustment
 #define PITCH_LEVEL_TOLERANCE 1
-byte levelTolerance[2] = {ROLL_LEVEL_TOLERANCE, PITCH_LEVEL_TOLERANCE};
+float levelTolerance[2] = {ROLL_LEVEL_TOLERANCE * radPerDeg, PITCH_LEVEL_TOLERANCE * radPerDeg}; //the body is still considered as level, no angle adjustment
 #define LARGE_PITCH 75
 //the following coefficients will be divided by 10.0 in the adjust() function. so (float) 0.1 can be saved as (int8_t) 1
 //this trick allows using int8_t array insead of float array, saving 96 bytes and allows storage on EEPROM
-#define panF 10
-#define tiltF 10
+#define panF 60
+#define tiltF 60
 #define sRF 50   //shoulder roll factor
-#define sPF 2 //shoulder pitch factor
-#define uRF 5 //upper leg roll factor
-#define uPF 9 //upper leg pitch factor
+#define sPF 12 //shoulder pitch factor
+#define uRF 30 //upper leg roll factor
+#define uPF 30 //upper leg pitch factor
 #define lRF (-1.5*uRF) //lower leg roll factor 
 #define lPF (-1.5*uPF)//lower leg pitch factor
 #define LEFT_RIGHT_FACTOR 2
+#define FRONT_BACK_FACTOR 2
 #define POSTURE_WALKING_FACTOR 0.5
+#ifdef POSTURE_WALKING_FACTOR
 float postureOrWalkingFactor;
+#endif
 
-#ifndef X_LEG // > > leg
-float adaptiveParameterArray[16][NUM_ADAPT_PARAM] = {
+#ifdef X_LEG
+int8_t adaptiveParameterArray[16][NUM_ADAPT_PARAM] = {
+  { -panF, 0}, { -panF, -tiltF}, { -1.3 * panF, 0}, {0, 0},
+  {sRF, -sPF}, { -sRF, -sPF}, { -sRF, sPF}, {sRF, sPF},
+  {uRF, uPF}, {uRF, uPF}, { -uRF, uPF}, { -uRF, uPF},
+  {lRF, lPF}, {lRF, lPF}, { -lRF, lPF}, { -lRF, lPF}
+};
+#else // >> leg
+int8_t adaptiveParameterArray[16][NUM_ADAPT_PARAM] = {
   { -panF, 0}, { -panF / 2, -tiltF}, { -2 * panF, 0}, {0, 0},
   {sRF, -sPF}, { -sRF, -sPF}, { -sRF, sPF}, {sRF, sPF},
   {uRF, uPF}, {uRF, uPF}, {uRF, uPF}, {uRF, uPF},
   {lRF, lPF}, {lRF, lPF}, {lRF, lPF}, {lRF, lPF}
 };
-#else // >< leg
-float adaptiveParameterArray[16][NUM_ADAPT_PARAM] = {
-  { -panF, 0}, { -panF, -tiltF}, { -2 * panF, 0}, {0, 0},
-  {sRF, -sPF}, { -sRF, -sPF}, { -sRF, sPF}, {sRF, sPF},
-  {uRF, uPF}, {uRF, uPF}, { -uRF, uPF}, { -uRF, uPF},
-  {lRF, lPF}, {lRF, lPF}, { -lRF, lPF}, { -lRF, lPF}
-};
 #endif
+
 float RollPitchDeviation[2];
+int8_t slope = 1;
 inline int8_t adaptiveCoefficient(byte idx, byte para) {
   return EEPROM.read(ADAPT_PARAM + idx * NUM_ADAPT_PARAM + para);
 }
 
 float adjust(byte i) {
-  int rollAdj;
+  float rollAdj, pitchAdj;
   if (i == 1 || i > 3)  {//check idx = 1
     bool leftQ = (i - 1 ) % 4 > 1 ? true : false;
     //bool frontQ = i % 4 < 2 ? true : false;
     //bool upperQ = i / 4 < 3 ? true : false;
     float leftRightFactor = 1;
-    if ((leftQ && RollPitchDeviation[0] > 0 )
-        || ( !leftQ && RollPitchDeviation[0] < 0))
+    if ((leftQ && RollPitchDeviation[0]*slope  > 0 )
+        || ( !leftQ && RollPitchDeviation[0]*slope  < 0))
       leftRightFactor = LEFT_RIGHT_FACTOR;
-    rollAdj = adaptiveCoefficient(i, 0) * leftRightFactor * abs(RollPitchDeviation[0]);
+    rollAdj = fabs(RollPitchDeviation[0]) * adaptiveCoefficient(i, 0) * leftRightFactor;
 
   }
   else
-    rollAdj = adaptiveCoefficient(i, 0) * RollPitchDeviation[0];
+    rollAdj = RollPitchDeviation[0] * adaptiveCoefficient(i, 0) ;
 
-  return 0.1 * ((i > 3 ? postureOrWalkingFactor : 1) * rollAdj + adaptiveCoefficient(i, 1) * RollPitchDeviation[1]);
+  return (
+#ifdef POSTURE_WALKING_FACTOR
+           (i > 3 ? postureOrWalkingFactor : 1) *
+#endif
+           // rollAdj + adaptiveCoefficient(i, 1) * ((i % 4 < 2) ? RollPitchDeviation[1] : abs(RollPitchDeviation[1])));
+           rollAdj + RollPitchDeviation[1] * adaptiveCoefficient(i, 1) );
 }
 
 void saveCalib(int8_t *var) {
@@ -642,14 +658,14 @@ void calibratedPWM(byte i, float angle) {
 }
 
 void allCalibratedPWM(char * dutyAng) {
-  for (int8_t i = DOF-1; i >=0; i--) {
+  for (int8_t i = DOF - 1; i >= 0; i--) {
     calibratedPWM(i, dutyAng[i]);
   }
 }
 
 void shutServos() {
   delay(100);
-  for (int8_t i = DOF-1; i >=0; i--) {
+  for (int8_t i = DOF - 1; i >= 0; i--) {
     pwm.setPWM(i, 0, 4096);
   }
 }
@@ -671,7 +687,7 @@ void transform( char * target,  float speedRatio = 1, byte offset = 0) {
   //  PTL();
 }
 
-void behavior(int n, char** skill, float *speedRatio,int *pause) {
+void behavior(int n, char** skill, float *speedRatio, int *pause) {
   for (byte i = 0; i < n; i++) {
     motion.loadBySkillName(skill[i]);
     transform( motion.dutyAngles, speedRatio[i]);
@@ -692,7 +708,13 @@ template <typename T> void printList(T * arr, byte len = DOF) {
   }
   PTL();
 }
-
+template <typename T> void printEEPROMList(int EEaddress, byte len = DOF) {
+  for (byte i = 0; i < len; i++) {
+    PT((T)(EEPROM.read(EEaddress + i)));
+    PT('\t');
+  }
+  PTL();
+}
 char getUserInput() {//limited to one character
   while (!Serial.available());
   return Serial.read();
