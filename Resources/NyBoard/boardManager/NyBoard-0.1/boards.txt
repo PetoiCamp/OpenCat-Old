@@ -5,8 +5,8 @@ nyboard01.name=ATmega328P (5V, 20 MHz) NyBoard
 nyboard01.upload.tool=arduino:avrdude
 nyboard01.upload.protocol=arduino
 nyboard01.upload.maximum_size=30720
-nyboard01.upload.upload.maximum_data_size=2048
-nyboard01.upload.upload.speed=57600
+nyboard01.upload.maximum_data_size=2048
+nyboard01.upload.speed=57600
 
 nyboard01.bootloader.tool=arduino:avrdude
 nyboard01.bootloader.low_fuses=0xFF

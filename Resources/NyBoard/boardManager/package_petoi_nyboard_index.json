@@ -12,14 +12,14 @@
         {
           "name": "Petoi NyBoard",
           "architecture": "avr",
-          "version": "0.1.1",
+          "version": "0.1.2",
           "category": "Contributed",
           "help": {
             "online": "https://www.petoi.com/forum/"
           },
-          "url": "https://raw.githubusercontent.com/asmagill/OpenCat/boardManagerSupport/Resources/NyBoard/boardManager/NyBoard-0.1.1.tar.bz2",
-          "archiveFileName": "NyBoard-0.1.1.tar.bz2",
-          "checksum": "SHA-256:64e959b29a2bbb8165699781a010e03aeac29974e362051fce50a1c21e785c66",
+          "url": "https://raw.githubusercontent.com/asmagill/OpenCat/boardManagerSupport/Resources/NyBoard/boardManager/NyBoard-0.1.2.tar.bz2",
+          "archiveFileName": "NyBoard-0.1.2.tar.bz2",
+          "checksum": "SHA-256:78815fc78fdba0bd45c2079dce2be8c290a7e83d40dceba14f0f8ee301a402c8",
           "size": "2587",
           "boards": [
             {"name": "ATmega328P (5V, 20 MHz) NyBoard"}
