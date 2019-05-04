@@ -1,4 +1,4 @@
-/*
+ /*
     Instincts trained by Rongzhong
     Save calibration data and constants to EEPROM
 
@@ -40,7 +40,7 @@ void writeConst() {
   EEPROM.update(MELODY, sizeof(melody));
   for (byte i = 0; i < sizeof(melody); i++)
     EEPROM.update(MELODY - 1 - i, melody[i]);
-  PTLF("Reset all joint calibration? (Y/n)");
+  PTLF("Reset joint calibration? (Y/n)");
   while (!Serial.available());
   char resetJointCalibrationQ = Serial.read();
   for (byte i = 0; i < DOF; i++) {
@@ -62,7 +62,7 @@ void saveSkillInfoFromProgmemToOnboardEeprom() {
   int skillAddressShift = 0;
   unsigned int i2cEepromAddress = 0; //won't hurt if unused
 #ifdef I2C_EEPROM
-  PTLF("\n* Do you need to update Instincts? (Y/n)");
+  PTLF("\n* Update Instincts? (Y/n)");
   while (!Serial.available());
   char choice = Serial.read();
   PT(choice == 'Y' ? "Will" : "Won't");
@@ -89,7 +89,7 @@ void saveSkillInfoFromProgmemToOnboardEeprom() {
 #endif
     skillAddressShift += 2; // one int (2 bytes) for address
   }
-  PTLF("  ******************* Notice! ****************************");
+  PTLF("  *********** Notice! *********");
   PTLF("    Maximal storage of onboard EEPROM is 1024 bytes.");
   PTF("\tInstinctive dictionary used ");
   PT(SKILLS + skillAddressShift);
@@ -108,7 +108,7 @@ void saveSkillInfoFromProgmemToOnboardEeprom() {
     PTLF(" %)!");
   }
 #endif
-  PTLF("  ********************************************************");
+  PTLF("  *****************************");
   PTLF("Finished!");
 }
 
@@ -216,7 +216,7 @@ void setup() {
 
   // wait for ready
   while (Serial.available() && Serial.read()); // empty buffer
-  PTLF("\n* Change the \"V0_1\" in \"#define NyBoard_V0_1\" in Instinct.h according to your NyBoard version!");
+  PTLF("\n* Change the \"V0_*\" in \"#define NyBoard_V0_1\" in Instinct.h according to your NyBoard version!");
   PTLF("\n* OpenCat Writing Constants to EEPROM...");
   writeConst(); // only run for the first time when writing to the board.
   beep(30);

@@ -1,6 +1,14 @@
 -------------------------
 Update History
-Apr.22nd, 2019
+
+May. 4, 2019
+- Added a new token 'j' to show the list of current joint angles. 
+  It can be used after multiple 'm' commands to define a new posture. 
+- Added a key ("tb" on remote) to turn off the Gyro and boost running speed for 4 cycles.
+- Added a greeting behavior ("hi" on remote).
+
+
+Apr.22, 2019
 
 Nybble.ino
 - Added offsetLR and related logic to let Nybble look around when walking and turning

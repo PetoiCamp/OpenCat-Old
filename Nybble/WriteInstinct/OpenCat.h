@@ -596,7 +596,7 @@ float postureOrWalkingFactor;
 
 #ifdef X_LEG
 int8_t adaptiveParameterArray[16][NUM_ADAPT_PARAM] = {
-  { -panF, 0}, { -panF, -tiltF}, { -1.3 * panF, 0}, {0, 0},
+  { -panF, 0}, { -panF, -tiltF}, { -2 * panF, 0}, {0, 0},
   {sRF, -sPF}, { -sRF, -sPF}, { -sRF, sPF}, {sRF, sPF},
   {uRF, uPF}, {uRF, uPF}, { -uRF, uPF}, { -uRF, uPF},
   {lRF, lPF}, {lRF, lPF}, { -lRF, lPF}, { -lRF, lPF}
@@ -681,6 +681,7 @@ void transform( char * target,  float speedRatio = 1, byte offset = 0) {
     for (byte i = offset; i < DOF; i++) {
       float dutyAng = (target[i - offset] + (steps == 0 ? 0 : (1 + cos(M_PI * s / steps)) / 2 * diff[i - offset]));
       calibratedPWM(i,  dutyAng);
+      delayMicroseconds(100);
     }
   delete [] diff;
   //  printList(currentAng);

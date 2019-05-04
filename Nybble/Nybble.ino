@@ -84,20 +84,20 @@ String translateIR() // takes action based on IR code received
 
     case 0xFFA25D: PTLF(" CH-");          return (F("sit"));
     case 0xFF629D: PTLF(" CH");           return (F("d"));          //shutdown all servos
-    case 0xFFE21D: PTLF(" CH+");          return (F("pee"));        //stand on three feet
+    case 0xFFE21D: PTLF(" CH+");          return (F("hi"));        //greetings
 
 
     case 0xFF22DD: PTLF(" |<<");          return (F("buttUp"));     //butt up
     case 0xFF02FD: PTLF(" >>|");          return (F("balance"));    //neutral standing
     case 0xFFC23D: PTLF(" >||");          return (F("str"));        //stretch
 
-    case 0xFFE01F: PTLF(" -");            return (F("rc"));         //recover (turtle roll )
-    case 0xFFA857: PTLF(" +");            return (F("wk"));         //walk
+    case 0xFFE01F: PTLF(" -");            return (F("pee"));         //
+    case 0xFFA857: PTLF(" +");            return (F("tr"));         //trot
     case 0xFF906F: PTLF(" EQ");           return (F("pu"));         // push up
 
-    case 0xFF6897: PTLF(" 0");            return (F("trL"));        //trot left
-    case 0xFF9867: PTLF(" 100+");         return (F("tr"));         //trot fast/run
-    case 0xFFB04F: PTLF(" 200+");         return (F("trR"));        //trot right
+    case 0xFF6897: PTLF(" 0");            return (F("wkL"));        //walk left
+    case 0xFF9867: PTLF(" 100+");         return (F("wk"));         //walk
+    case 0xFFB04F: PTLF(" 200+");         return (F("wkR"));        //walk right
 
     case 0xFF30CF: PTLF(" 1");            return (F("crL"));        //crawl left
     case 0xFF18E7: PTLF(" 2");            return (F("cr"));         //crawl fast
@@ -107,26 +107,26 @@ String translateIR() // takes action based on IR code received
     case 0xFF38C7: PTLF(" 5");            return (F("bk"));         //back
     case 0xFF5AA5: PTLF(" 6");            return (F("bkR"));        //back right
 
-    case 0xFF42BD: PTLF(" 7");            return (F("calib"));      //calibration posture
-    case 0xFF4AB5: PTLF(" 8");            return (F("zero"));       //customed skill
-    case 0xFF52AD: PTLF(" 9");            return (F("zero"));       //customed skill
+    case 0xFF42BD: PTLF(" 7");            return (F("tb"));      //turbo
+    case 0xFF4AB5: PTLF(" 8");            return (F("bd"));       //customed skill
+    case 0xFF52AD: PTLF(" 9");            return (F("rc"));       //recover (turtle roll )
 #else
     case 0xFFA25D:                        return (F("sit"));
     case 0xFF629D:                        return (F("d"));          //shutdown all servos
-    case 0xFFE21D:                        return (F("pee"));        //stand on three feet
+    case 0xFFE21D:                        return (F("hi"));        //greetings
 
 
     case 0xFF22DD:                        return (F("buttUp"));     //butt up
     case 0xFF02FD:                        return (F("balance"));    //neutral standing
     case 0xFFC23D:                        return (F("str"));        //stretch
 
-    case 0xFFE01F:                        return (F("rc"));         //recover (turtle roll )
-    case 0xFFA857:                        return (F("wk"));         //walk
+    case 0xFFE01F:                        return (F("pee"));         //
+    case 0xFFA857:                        return (F("tr"));         //trot
     case 0xFF906F:                        return (F("pu"));         // push up
 
-    case 0xFF6897:                        return (F("trL"));        //trot left
-    case 0xFF9867:                        return (F("tr"));         //trot fast/run
-    case 0xFFB04F:                        return (F("trR"));        //trot right
+    case 0xFF6897:                        return (F("wkL"));        //walk left
+    case 0xFF9867:                        return (F("wk"));         //walk
+    case 0xFFB04F:                        return (F("wkR"));        //walk right
 
     case 0xFF30CF:                        return (F("crL"));        //crawl left
     case 0xFF18E7:                        return (F("cr"));         //crawl fast
@@ -136,9 +136,9 @@ String translateIR() // takes action based on IR code received
     case 0xFF38C7:                        return (F("bk"));         //back
     case 0xFF5AA5:                        return (F("bkR"));        //back right
 
-    case 0xFF42BD:                        return (F("calib"));      //calibration posture
-    case 0xFF4AB5:                        return (F("zero"));       //customed skill
-    case 0xFF52AD:                        return (F("zero"));       //customed skill
+    case 0xFF42BD:                        return (F("tb"));      //turbo
+    case 0xFF4AB5:                        return (F("bd"));       //customed skill
+    case 0xFF52AD:                        return (F("rc"));       //recover (turtle roll )
 #endif
 
     case 0xFFFFFFFF: return (""); //Serial.println(" REPEAT");
@@ -164,6 +164,8 @@ char *newCmd = new char[CMD_LEN];
 byte newCmdIdx = 0;
 byte hold = 0;
 int8_t offsetLR = 0;
+bool checkGyro = true;
+int8_t countDown = 0;
 
 uint8_t timer = 0;
 //#define SKIP 1
@@ -425,8 +427,17 @@ void setup() {
 
 void loop() {
   float voltage = analogRead(BATT);
-  if (voltage < 740) { //give the cat a break when voltage drops after sprint
-    PTL(voltage);//PTL(voltage *  5.0 / 1024.0*3); //real voltage
+  if (voltage <
+#ifdef NyBoard_V0_1
+      740
+#else
+      300
+#endif
+     ) { //give the cat a break when voltage drops after sprint
+      //adjust the thresholds according to your batteries' voltage
+	//if set too high, Nybble will keep crying. 
+	//If too low, Nybble may faint due to temporary voltage drop
+    PTL(voltage);//relative voltage
     meow();
   }
   else {
@@ -434,7 +445,8 @@ void loop() {
     newCmdIdx = 0;
     // MPU block
 #ifdef GYRO //if opt out the gyro, the calculation can be really fast
-    checkBodyMotion();
+    if (checkGyro && countDown == 0)
+      checkBodyMotion();
 #endif
     // accident block
     //...
@@ -449,6 +461,28 @@ void loop() {
         strcpy(newCmd, IRsig.c_str());
         if (!strcmp(newCmd, "d"))
           token = 'd';
+        else if (!strcmp(newCmd, "tb")) {
+          if (checkGyro)
+            countDown = 4;
+          checkGyro = !checkGyro;
+        }
+        else if (!strcmp(newCmd, "hi")) {
+          motion.loadBySkillName("sit");
+          transform( motion.dutyAngles);
+          char **bList = new char*[2];
+          bList[0] = "hi";
+          bList[1] = "hi2";
+          float speedRatio[2] = {1, 1};
+          int pause[2] = {0, 0};
+          for (byte i = 0; i < 4; i++)
+            behavior(2, bList, speedRatio, pause);
+          meow();
+          delete []bList;
+          delay(200);
+          motion.loadBySkillName("sit");
+          transform( motion.dutyAngles);
+          strcpy(newCmd, "rest");
+        }
         else if (!strcmp(newCmd, "rc")) {
           char **bList = new char*[10];
           bList[0] = "rc1";
@@ -465,6 +499,7 @@ void loop() {
           int pause[10] = {500, 500, 500, 0, 0, 0, 0, 0, 0, 0};
           behavior( 10, bList, speedRatio, pause);
           strcpy(newCmd, "rest");
+          delete []bList;
 
         }
         else if (!strcmp(newCmd, "pu")) {
@@ -477,7 +512,7 @@ void loop() {
             behavior(2, bList, speedRatio, pause);
           strcpy(newCmd, "rest");
           meow();
-
+          delete []bList;
         }
         else
           token = 'k';
@@ -536,6 +571,10 @@ void loop() {
         //
         delete [] inBuffer;
       }
+      else if (token == 'j')//show the list of current joint anles
+      {
+        printList((int8_t*)currentAng);
+      }
       else if (token == 'c' || token == 'm') {
         int8_t target[2] = {};
         String inBuffer = Serial.readStringUntil('\n');
@@ -570,7 +609,8 @@ void loop() {
         }
         else if (token == 'm') {
           //SPF("moving [ targetIdx, angle ]: ");
-          motion.dutyAngles[target[0]] = target[1];
+          motion.dutyAngles[target[0]] = currentAng[target[0]] = target[1];
+
         }
         PT(token);
         printList(target, 2);
@@ -635,7 +675,14 @@ void loop() {
           if (updateFrame++ == SKIP) {
             updateFrame = 0;
 #endif
-            timer = (timer + 1) % motion.period;
+            // timer = (timer + 1) % motion.period;
+            timer++;
+            if (timer == motion.period) {
+              timer = 0;
+              if (countDown == 0)
+                checkGyro = true;
+              else countDown--;
+            }
 #ifdef SKIP
           }
 #endif
@@ -655,7 +702,7 @@ void loop() {
           calibratedPWM(jointIdx, (jointIdx != 1 ? offsetLR : 0) //look left or right
                         + 10 * sin (timer * (jointIdx + 2) * M_PI / motion.period) //look around
 #ifdef GYRO
-                        + adjust(jointIdx)
+                        + (checkGyro ? adjust(jointIdx) : 0)
 #endif
                        );
         }
