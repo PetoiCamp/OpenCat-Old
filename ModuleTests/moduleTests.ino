@@ -359,7 +359,7 @@ void setup()
     }
   } while (devStatus);
 
-  PTLF("\n****** NyBoard Test Sketch ******");
+  PTLF("\n** NyBoard Test Sketch **");
 
   /*PTLF("If you cannot see this sentence on serial monitor");
     PTLF("\tThere's something wrong with your Arduino IDE's configuration.");
@@ -411,7 +411,7 @@ void loop() {
           PTLF("Power the board with two Li-ion batteries in series (6~8.4V). Check:");
           PTLF("   a. Both of the LEDs should lit up.");
           PTLF("   b. Dial the potentiometer to make the voltage over servos around 6V.");
-          PTLF("   c. Plug 16 servo to the PWM pins. Allow the servos rotate without colliding into each other");
+          PTLF("   c. Plug 16 servos to the PWM pins. Allow the servos rotate without colliding into each other");
           PTLF("\tuse IR remote. Only location of the keys matter.");
           PTL();
           PTLF("\to  o  o\n\to  o  o\n\to  o  o\n\t0  G  L\n\t1  2  3\n\t4  5  6\n\t7  8  9");
@@ -609,7 +609,7 @@ The five boxing wizards jump quickly."; // data to write
     }
     beep(loopCounter * 2);
     if (!passed[loopCounter - 1]) {
-      PTLF("***** TEST FAIL! *****");
+      PTLF("** TEST FAIL! **");
       beep(5, 500, 100);
     }
     PTL();
