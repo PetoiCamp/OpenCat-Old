@@ -108,7 +108,7 @@ String translateIR() // takes action based on IR code received
     case 0xFF5AA5: PTLF(" 6");            return (F("bkR"));        //back right
 
     case 0xFF42BD: PTLF(" 7");            return (F("tb"));      //turbo
-    case 0xFF4AB5: PTLF(" 8");            return (F("bd"));       //customed skill
+    case 0xFF4AB5: PTLF(" 8");            return (F("zero"));       //customed skill
     case 0xFF52AD: PTLF(" 9");            return (F("rc"));       //recover (turtle roll )
 #else
     case 0xFFA25D:                        return (F("sit"));
@@ -137,7 +137,7 @@ String translateIR() // takes action based on IR code received
     case 0xFF5AA5:                        return (F("bkR"));        //back right
 
     case 0xFF42BD:                        return (F("tb"));      //turbo
-    case 0xFF4AB5:                        return (F("bd"));       //customed skill
+    case 0xFF4AB5:                        return (F("zero"));       //customed skill
     case 0xFF52AD:                        return (F("rc"));       //recover (turtle roll )
 #endif
 
