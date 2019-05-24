@@ -199,7 +199,9 @@ void checkBodyMotion()  {
 
       // -- RzLi --
 #ifdef FIX_OVERFLOW
+#ifdef DEVELOPER
       PTLF("FIFO overflow! Using last reading!");
+#endif
       lag = (lag - 1 + HISTORY) % HISTORY;
 #endif
       // --
@@ -331,7 +333,7 @@ void setup() {
 
       // enable Arduino interrupt detection
       PTLF("Enabling interrupt detection");
-      attachInterrupt(0, dmpDataReady, RISING);
+      attachInterrupt(INTERRUPT, dmpDataReady, RISING);
       mpuIntStatus = mpu.getIntStatus();
 
       // set our DMP Ready flag so the main loop() function knows it's okay to use it
@@ -429,14 +431,14 @@ void loop() {
   float voltage = analogRead(BATT);
   if (voltage <
 #ifdef NyBoard_V0_1
-      740
+      650
 #else
       300
 #endif
      ) { //give the cat a break when voltage drops after sprint
-      //adjust the thresholds according to your batteries' voltage
-	//if set too high, Nybble will keep crying. 
-	//If too low, Nybble may faint due to temporary voltage drop
+    //adjust the thresholds according to your batteries' voltage
+    //if set too high, Nybble will keep crying.
+    //If too low, Nybble may faint due to temporary voltage drop
     PTL(voltage);//relative voltage
     meow();
   }
@@ -529,99 +531,100 @@ void loop() {
       PTL(token);
       beep(newCmdIdx * 4);
       // this block handles argumentless tokens
-      if (token == 'h')
-        PTLF("** Help Information **");// print the help document
-      else if (token == 'd' ) {
-        motion.loadBySkillName("rest");
-        transform( motion.dutyAngles);
-        PTLF("shut down servos");
-        shutServos();
-      }
-      else if (token == 's') {
-        PTLF("save calibration");
-        saveCalib(servoCalibs);
-      }
-      else if (token == 'a') {
-        PTLF("abort calibration");
-        for (byte i = 0; i < DOF; i++) {
-          servoCalibs[i] = servoCalib( i);
-        }
-      }
-      // this block handles array like arguments
-      else if (token == 'l' ) {
-        byte len = Serial.read();
-        PT(len);
-        //        //PTLF("receiving 16 angle list in binary [ byte, ..., byte ] ");
-
-        char *inBuffer = new char[len];
-        //
-        for (byte i = 0; i < len; i++) {
-          inBuffer[i] = Serial.read();
-          PT(inBuffer[i]);
-          PTL();
-        }
-        if (len == DOF)
-          allCalibratedPWM(inBuffer);
-        else
-          for (byte i = 0; i < len / 2; i++)
-            calibratedPWM(inBuffer[i * 2], inBuffer[i * 2 + 1]);
-        //          Serial.readBytes(inBuffer, DOF);
-        //          //allCalibratedPWM(dutyAng+1);
-        //          delay(200);
-        //
-        delete [] inBuffer;
-      }
-      else if (token == 'j')//show the list of current joint anles
-      {
-        printList((int8_t*)currentAng);
-      }
-      else if (token == 'c' || token == 'm') {
-        int8_t target[2] = {};
-        String inBuffer = Serial.readStringUntil('\n');
-        byte inLen = 0;
-        strcpy(newCmd, inBuffer.c_str());
-        char *pch;
-        pch = strtok (newCmd, " ,");
-        for (byte c = 0; pch != NULL; c++)
-        {
-          target[c] = atoi(pch);
-          pch = strtok (NULL, " ,");
-          inLen++;
-        }
-
-        if (token == 'c') {
-          //PTLF("calibrating [ targetIdx, angle ]: ");
-          if (strcmp(lastCmd, "c")) { //first time entering the calibration function
-            motion.loadBySkillName("calib");
+      switch (token) {
+        case 'h': {
+            PTLF("** Help Information **");// print the help document
+            break;
+          }
+        case 'd': {
+            motion.loadBySkillName("rest");
             transform( motion.dutyAngles);
+            PTLF("shut down servos");
+            shutServos();
+            break;
           }
-          if (inLen == 2)
-            servoCalibs[target[0]] = target[1];
-          PTL();
-          for (byte i = 0; i < DOF; i++) {
-            PT(i);
-            PT(",\t");
+
+        case 's': {
+            PTLF("save calibration");
+            saveCalib(servoCalibs);
+            break;
           }
-          PTL();
-          printList(servoCalibs);
-          yield();
+        case 'a': {
+            PTLF("abort calibration");
+            for (byte i = 0; i < DOF; i++) {
+              servoCalibs[i] = servoCalib( i);
+            }
+            break;
+          }
 
-        }
-        else if (token == 'm') {
-          //SPF("moving [ targetIdx, angle ]: ");
-          motion.dutyAngles[target[0]] = currentAng[target[0]] = target[1];
+        // this block handles array like arguments
+        case 'i':
+        case 'l': {
+            String inBuffer = Serial.readStringUntil('~');
+            int8_t numArg = inBuffer.length();
+            char* list = inBuffer.c_str();
+            if (token == 'i') {
+              for (int i = 0; i < numArg; i += 2) {
+                calibratedPWM(list[i], list[i + 1]);
+              }
+            }
+            else if (token == 'l') {
+              allCalibratedPWM(list);
+            }
+            break;
+          }
+        case 'j': { //show the list of current joint anles
+            printList((int8_t*)currentAng);
+            break;
+          }
+        case 'c':
+        case 'm': {
+            int8_t target[2] = {};
+            String inBuffer = Serial.readStringUntil('\n');
+            byte inLen = 0;
+            strcpy(newCmd, inBuffer.c_str());
+            char *pch;
+            pch = strtok (newCmd, " ,");
+            for (byte c = 0; pch != NULL; c++)
+            {
+              target[c] = atoi(pch);
+              pch = strtok (NULL, " ,");
+              inLen++;
+            }
 
-        }
-        PT(token);
-        printList(target, 2);
+            if (token == 'c') {
+              //PTLF("calibrating [ targetIdx, angle ]: ");
+              if (strcmp(lastCmd, "c")) { //first time entering the calibration function
+                motion.loadBySkillName("calib");
+                transform( motion.dutyAngles);
+              }
+              if (inLen == 2)
+                servoCalibs[target[0]] = target[1];
+              PTL();
+              for (byte i = 0; i < DOF; i++) {
+                PT(i);
+                PT(",\t");
+              }
+              PTL();
+              printList(servoCalibs);
+              yield();
 
-        int duty = SERVOMIN + PWM_RANGE / 2 + float(middleShift(target[0])  + servoCalibs[target[0]] + motion.dutyAngles[target[0]]) * pulsePerDegree[target[0]] * rotationDirection(target[0]);
-        pwm.setPWM(pin(target[0]), 0,  duty);
-      }
+            }
+            else if (token == 'm') {
+              //SPF("moving [ targetIdx, angle ]: ");
+              motion.dutyAngles[target[0]] = currentAng[target[0]] = target[1];
+            }
+            PT(token);
+            printList(target, 2);
 
-      else if (Serial.available() > 0) {
-        String inBuffer = Serial.readStringUntil('\n');
-        strcpy(newCmd, inBuffer.c_str());
+            int duty = SERVOMIN + PWM_RANGE / 2 + float(middleShift(target[0])  + servoCalibs[target[0]] + motion.dutyAngles[target[0]]) * pulsePerDegree[target[0]] * rotationDirection(target[0]);
+            pwm.setPWM(pin(target[0]), 0,  duty);
+            break;
+          }
+        default: if (Serial.available() > 0) {
+            String inBuffer = Serial.readStringUntil('\n');
+            strcpy(newCmd, inBuffer.c_str());
+          }
       }
       while (Serial.available() && Serial.read()); //flush the remaining serial buffer in case the commands are parsed incorrectly
       //check above

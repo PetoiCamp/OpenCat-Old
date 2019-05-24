@@ -87,6 +87,7 @@
 #define PTLF(s) Serial.println(F(s))
 
 //board configuration
+#define INTERRUPT 0
 #define IR_RECIEVER 4 // Signal Pin of IR receiver to Arduino Digital Pin 4
 #define BUZZER 5
 #define GYRO

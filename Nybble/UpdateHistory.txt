@@ -1,7 +1,18 @@
--------------------------
 Update History
+-------------------------
+
+May.23, 2019
+
+* Nybble.ino
+- Implemented serial parser for token 'i' and 'l'.
+- Converted the serial parser from if...else to switch cases.
+- Updated serialProtocol.png for the actual codes of 'i' and 'l'.
+- Lowered the battery voltage watcher's threshold.
+- Changed the pin "0" in attachInterrupt() to "#define INTERRUPT 0" in OpenCat.h.
 
 May. 4, 2019
+
+* Nybble.ino
 - Added a new token 'j' to show the list of current joint angles. 
   It can be used after multiple 'm' commands to define a new posture. 
 - Added a key ("tb" on remote) to turn off the Gyro and boost running speed for 4 cycles.
@@ -10,14 +21,14 @@ May. 4, 2019
 
 Apr.22, 2019
 
-Nybble.ino
+*Nybble.ino
 - Added offsetLR and related logic to let Nybble look around when walking and turning
 - Added battery voltage reading at the beginning of loop().
   If the voltage drops below certain value, the program will pause by meow() to recharges the capacitor.
   It will reduce the abnormal rotation of servos and chances of board reset.
 - Redefined the key map of infrared remote.
 
-OpenCat.h
+* OpenCat.h
 - Added preprocessor #DEVELOPER to hide some detailed debugging information and libraries.
 - Moved "#define NYBBLE" from OpenCat.h to Instinct.h 
 - Changed yprLag from int8_t (angles) to float (radian) to reduce calculations for degree/radian conversion
