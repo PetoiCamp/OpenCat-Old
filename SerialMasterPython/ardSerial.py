@@ -19,11 +19,18 @@ ser = serial.Serial(
 
 def serialWriteByte(token, var=[]):
 #    print("Token "+token+" var "+str(var))
-    if (token == 'c' or token == 'm') and len(var)==2:
-        instrStr=var[0]+" "+var[1]
+    if (token == 'c' or token == 'm') and len(var)>=2:
+        instrStr=""
+        for element in var:
+            instrStr=instrStr +element+" "
+        print(instrStr)
     elif token == 'l' or token=='i':
+        if(len(var[0])>1):
+            var.insert(1,var[0][1:])       
         var[1:]=list(map(lambda x:int(x), var[1:]))
+        print(var)
         instrStr = token+struct.pack('b' * len(var[1:]), *var[1:])+'~'
+
     elif token == 'w' or token == 'k':
         instrStr = var[0] + '\n'
     else:
