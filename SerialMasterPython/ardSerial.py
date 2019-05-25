@@ -11,29 +11,35 @@ ser = serial.Serial(
     parity=serial.PARITY_NONE,
     stopbits=serial.STOPBITS_ONE,
     bytesize=serial.EIGHTBITS,
-    timeout=1
+    timeout=1,
+    #rtscts=True,
+#    dsrdtr=True        
 )
 
 
-def serialWriteByte(token, var=""):
-
-    if token == 'c' or token == 't':  # data
-        instrStr = token + str(var[0]) + ',' + str(var[1]) + '\n'
-    elif token == 'l':  # use binary to reduce packet size
-        ser.write('l' + str(len(var)))
-        instrStr = struct.pack('b' * len(var), *var)
+def serialWriteByte(token, var=[]):
+#    print("Token "+token+" var "+str(var))
+    if (token == 'c' or token == 'm') and len(var)==2:
+        instrStr=var[0]+" "+var[1]
+    elif token == 'l' or token=='i':
+        var[1:]=list(map(lambda x:int(x), var[1:]))
+        instrStr = token+struct.pack('b' * len(var[1:]), *var[1:])+'~'
     elif token == 'w' or token == 'k':
-        instrStr = token + var + "\n"
+        instrStr = var[0] + '\n'
     else:
         instrStr = token
+ #   print(instrStr)
     ser.write(instrStr)
 
-
 if __name__ == '__main__':
-    serialWriteByte('k',"sit")
-    time.sleep(2)
-    if len(sys.argv) == 2:
-        serialWriteByte(sys.argv[1][0], sys.argv[1][1:])
+#    serialWriteByte('k',"sit")
+    #time.sleep(2)
+    counter=0
+    
+    if len(sys.argv) >= 2:
+#        print(sys.argv[1][0], sys.argv[1:])        #remove later
+        serialWriteByte(sys.argv[1][0], sys.argv[1:])
+
     else:
         while True:
             for a in np.arange(0, 2 * math.pi, 0.2):
@@ -43,7 +49,13 @@ if __name__ == '__main__':
                 serialWriteByte('l', [2, math.cos(a) * 30])
                 time.sleep(0.04)
 
-    while ser.in_waiting:
-        x = ser.readline()
-        if x != "":
-            print (x + "\n")
+    while True:
+        time.sleep(0.01)
+        counter=counter+1
+        if counter>1000:
+            break
+        #print("number of chars:" +str(ser.in_waiting))
+        if ser.in_waiting>0:
+            x = ser.readline()
+            if x != "":
+                print (x),
