@@ -1,5 +1,11 @@
 Update History
 -------------------------
+May.25, 2019
+* OpenCat.h
+- Changed printList() to concatenate strings before printing them to serial. Reduced communication. 
+
+* ardSerial
+- Implemented serial communicator in Python on the Pi side. Almost equivalent to Arduino IDE's serial monitor. 
 
 May.23, 2019
 
