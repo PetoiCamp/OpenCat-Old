@@ -11,49 +11,47 @@ ser = serial.Serial(
     parity=serial.PARITY_NONE,
     stopbits=serial.STOPBITS_ONE,
     bytesize=serial.EIGHTBITS,
-    timeout=1,
-    #rtscts=True,
-#    dsrdtr=True        
+    timeout=1
 )
 
+def serialWriteNumToByte(token, var=[]): # Only to be used for c m i l within Python
+    if token =='c' or token =='m':
+        instrStr = token + str(var[0])+" "+str(var[1])+'\n'
+    
+    elif token == 'l' or token=='i':
+        var=list(map(lambda x:int(x), var))
+        instrStr=token+struct.pack('b' * len(var), *var)+'~'
+    ser.write(instrStr)    
 
-def serialWriteByte(token, var=[]):
-#    print("Token "+token+" var "+str(var))
+def serialWriteByte(var=[]):
+    token = var[0][0]
     if (token == 'c' or token == 'm') and len(var)>=2:
         instrStr=""
         for element in var:
             instrStr=instrStr +element+" "
-        print(instrStr)
     elif token == 'l' or token=='i':
         if(len(var[0])>1):
             var.insert(1,var[0][1:])       
         var[1:]=list(map(lambda x:int(x), var[1:]))
-        print(var)
         instrStr = token+struct.pack('b' * len(var[1:]), *var[1:])+'~'
 
     elif token == 'w' or token == 'k':
         instrStr = var[0] + '\n'
     else:
         instrStr = token
- #   print(instrStr)
     ser.write(instrStr)
 
 if __name__ == '__main__':
-#    serialWriteByte('k',"sit")
-    #time.sleep(2)
     counter=0
-    
     if len(sys.argv) >= 2:
 #        print(sys.argv[1][0], sys.argv[1:])        #remove later
-        serialWriteByte(sys.argv[1][0], sys.argv[1:])
+        serialWriteByte(sys.argv[1:])
 
     else:
         while True:
             for a in np.arange(0, 2 * math.pi, 0.2):
                 print (a)
-                serialWriteByte('l', [0, math.sin(a) * 30])
-                serialWriteByte('l', [1, math.cos(a) * 30])
-                serialWriteByte('l', [2, math.cos(a) * 30])
+                serialWriteByte(["ksit"])
                 time.sleep(0.04)
 
     while True:
