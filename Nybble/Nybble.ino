@@ -543,7 +543,7 @@ void loop() {
             shutServos();
             break;
           }
-        case 'b': {break;}
+        case 'b': {PTLF("Stuff is gonna happen");break;}
         case 's': {
             PTLF("save calibration");
             saveCalib(servoCalibs);
