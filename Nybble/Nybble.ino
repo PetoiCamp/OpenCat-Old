@@ -431,7 +431,7 @@ void loop() {
   float voltage = analogRead(BATT);
   if (voltage <
 #ifdef NyBoard_V0_1
-      0
+      650
 #else
       300
 #endif
