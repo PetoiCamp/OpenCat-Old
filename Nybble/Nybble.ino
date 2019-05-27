@@ -544,6 +544,8 @@ void loop() {
             break;
           }
 
+        case 'b': {PTLF("Stuff is gonna happen");break;}
+
         case 's': {
             PTLF("save calibration");
             saveCalib(servoCalibs);
