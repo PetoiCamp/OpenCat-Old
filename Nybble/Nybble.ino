@@ -431,7 +431,7 @@ void loop() {
   float voltage = analogRead(BATT);
   if (voltage <
 #ifdef NyBoard_V0_1
-      650
+      0
 #else
       300
 #endif
@@ -558,8 +558,10 @@ void loop() {
           }
 
         // this block handles array like arguments
-        case 'i':
-        case 'l': {
+        case 'i': //indexed joint motions: joint0, angle0, joint1, angle1, ...
+        case 'l': //list of all 16 joint: angle0, angle2,... angle15
+        case 'o': //for melody
+        {
             String inBuffer = Serial.readStringUntil('~');
             int8_t numArg = inBuffer.length();
             char* list = inBuffer.c_str();
@@ -577,8 +579,11 @@ void loop() {
             printList((int8_t*)currentAng);
             break;
           }
-        case 'c':
-        case 'm': {
+        case 'c': //calibration
+        case 'm': //move joint to angle
+        case 'u': //meow (repeat, increament)
+        case 'b': //beep(tone, duration): tone 0 is pause, duration range is 0~255
+        {
             int8_t target[2] = {};
             String inBuffer = Serial.readStringUntil('\n');
             byte inLen = 0;
@@ -614,11 +619,18 @@ void loop() {
               //SPF("moving [ targetIdx, angle ]: ");
               motion.dutyAngles[target[0]] = currentAng[target[0]] = target[1];
             }
+            else if (token == 'u') {
+              meow(target[1], 0, 50, 200, 1+target[0]);
+            }
+            else if (token == 'b') {
+              beep(target[0], (byte)target[1]);
+            }
             PT(token);
             printList(target, 2);
-
-            int duty = SERVOMIN + PWM_RANGE / 2 + float(middleShift(target[0])  + servoCalibs[target[0]] + motion.dutyAngles[target[0]]) * pulsePerDegree[target[0]] * rotationDirection(target[0]);
-            pwm.setPWM(pin(target[0]), 0,  duty);
+            if (token == 'c' || token == 'm') {
+              int duty = SERVOMIN + PWM_RANGE / 2 + float(middleShift(target[0])  + servoCalibs[target[0]] + motion.dutyAngles[target[0]]) * pulsePerDegree[target[0]] * rotationDirection(target[0]);
+              pwm.setPWM(pin(target[0]), 0,  duty);
+            }
             break;
           }
         default: if (Serial.available() > 0) {
