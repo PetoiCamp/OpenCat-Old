@@ -577,6 +577,7 @@ void loop() {
             printList((int8_t*)currentAng);
             break;
           }
+        case 'b': {break;}
         case 'c':
         case 'm': {
             int8_t target[2] = {};
