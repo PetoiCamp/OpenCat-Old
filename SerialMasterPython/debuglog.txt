@@ -1,0 +1,30 @@
+
+
+Testing command-line inputs
+
+    ./ardserial.py c->works
+
+    ./ardserial.py c15-> gives c1   5..which might be a problem
+
+    ./ardserial.py m1 75, m 1 75 also work
+
+    ./ardserial.py u-> works
+
+    ./ardSerial.py i 1 9 9 13 13 1-> works
+
+
+    ./ardserial.py u 0 7->works
+
+Testing wrapper() with schedule
+
+    The cases with ints arrays work
+
+    Single letter cases seem to work (although things 'ktr' and 'c8' might have issues)
+
+    string arrays might be an issues
+
+    Even though the last process is a d, the light doesnt turn off.
+
+    Beep works
+
+There might be a bug in 'k'

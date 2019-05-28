@@ -13,40 +13,53 @@ ser = serial.Serial(
     bytesize=serial.EIGHTBITS,
     timeout=1
 )
-
-def serialWriteNumToByte(token, var=[]): # Only to be used for c m i l within Python
-    if token =='c' or token =='m':
-        instrStr = token + str(var[0])+" "+str(var[1])+'\n'
+def wrapper(task):  #Structure is [token, var=[], time]
+    print task
+    if len(task)==2:
+        serialWriteByte([task[0]])
+    elif isinstance(task[1][0],int):
+        serialWriteNumToByte(task[0],task[1])
+    else:
+        serialWriteByte(task[1])
+    time.sleep(task[-1])
     
-    elif token == 'l' or token=='i':
+def serialWriteNumToByte(token, var=[]): # Only to be used for c m u b i l o within Python
+    #print("Num Token "); print(token);print(" var ");print(var);print("\n\n");
+    if token == 'l' or token=='i':
         var=list(map(lambda x:int(x), var))
         instrStr=token+struct.pack('b' * len(var), *var)+'~'
-    ser.write(instrStr)    
+    elif token =='c' or token =='m' or token =='u' or token =='b':
+        instrStr = token + str(var[0])+" "+str(var[1])+'\n'
+    print "!!!!"+ instrStr
+    ser.write(instrStr)
 
 def serialWriteByte(var=[]):
     token = var[0][0]
-    if (token == 'c' or token == 'm') and len(var)>=2:
+    #print var
+    if (token == 'c' or token == 'm' or token=='b' or token=='u') and len(var)>=2:
         instrStr=""
         for element in var:
             instrStr=instrStr +element+" "
-    elif token == 'l' or token=='i':
+    elif token == 'l' or token=='i' :
         if(len(var[0])>1):
             var.insert(1,var[0][1:])       
         var[1:]=list(map(lambda x:int(x), var[1:]))
         instrStr = token+struct.pack('b' * len(var[1:]), *var[1:])+'~'
-
     elif token == 'w' or token == 'k':
         instrStr = var[0] + '\n'
     else:
         instrStr = token
+    print "!!!!!!! "+instrStr
     ser.write(instrStr)
 
 if __name__ == '__main__':
     counter=0
     if len(sys.argv) >= 2:
-#        print(sys.argv[1][0], sys.argv[1:])        #remove later
-        serialWriteByte(sys.argv[1:])
-
+        if len(sys.argv)==2:
+            wrapper([sys.argv[1],0])
+        else:
+        #    print [sys.argv[1][0],sys.argv[1:],0]
+            wrapper([sys.argv[1][0],sys.argv[1:],0])
     else:
         while True:
             for a in np.arange(0, 2 * math.pi, 0.2):
