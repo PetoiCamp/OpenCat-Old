@@ -10,14 +10,22 @@ import numpy as np
 
 
 schedule = [['m',[1,45],1],\
-            ['m',[1,30],1],\
             ['d',5],\
-#            ['b','10','255',1],\
+            ['m',[1,-30],1],\
+            ['d',5],\
+
+            ['d',5],\
+
+            ['d',5],\
+
+            ['d',5],\
+
+            ['d',5],\
+            ['b','10','255',1],\
             ['ktr',10]]
 
 for task in schedule:
     wrapper(task)
-    print(task)
 for i in range(1000):
     #serialWriteByte(["i","0",str(int(15*math.sin(2*math.pi*i/100))),"1",str(int(15*math.sin(4*math.pi*i/100))),"2",str(int(15*math.sin(2*math.pi*i/100)))])
     #serialWriteNumToByte("i",[0,int(15*math.sin(2*math.pi*i/100)),1,int(15*math.sin(4*math.pi*i/100)),2,int(15*math.sin(2*math.pi*i/100))])
