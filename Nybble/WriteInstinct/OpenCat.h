@@ -133,7 +133,7 @@ void meow(int repeat = 0, int pause = 200, int startF = 50,  int endF = 200, int
       analogWrite(BUZZER, amp);
       delay(15); // wait for 15 milliseconds to allow the buzzer to vibrate
     }
-    delay(500/increment);
+    delay(100 + 500 / increment);
     analogWrite(BUZZER, 0);
     if (repeat)delay(pause);
   }
@@ -250,8 +250,8 @@ float radPerDeg = M_PI / 180;
 // tone: pause,1,  2,  3,  4,  5,  6,  7,  1,  2, 3,
 // code: 0,    1,  3,  5,  6,  8,  10, 12, 13, 15, 17
 int8_t melody[] = {8, 13, 10, 13, 8,  0,  5,  8,  3,  5, 8,
-                 8, 8,  32, 32, 8, 32, 32, 32, 32, 32, 8,
-                };
+                   8, 8,  32, 32, 8, 32, 32, 32, 32, 32, 8,
+                  };
 /*byte pins[] = {16, 16, 16, 16,
                16, 16, 16, 16,
                2, 3, 13, 12,

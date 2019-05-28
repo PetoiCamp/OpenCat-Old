@@ -242,9 +242,11 @@ void checkBodyMotion()  {
       // --
       //deal with accidents
       if (fabs(ypr[1])*degPerRad > LARGE_PITCH) {
+#ifdef DEVELOPER
         PT(ypr[1] * degPerRad);
         PTF("\t");
         PTL(ypr[2] * degPerRad);
+#endif
         if (!hold) {
           token = 'k';
           strcpy(newCmd, ypr[1]*degPerRad > LARGE_PITCH ? "lifted" : "dropped");
@@ -297,21 +299,21 @@ void setup() {
   // wait for ready
   while (Serial.available() && Serial.read()); // empty buffer
   delay(100);
-  PTLF("\n* Starting *");
-  PTLF("Initializing I2C");
-  PTLF("Connecting MPU6050...");
+  PTLF("\n* Start *");
+  PTLF("Initialize I2C");
+  PTLF("Connect MPU6050");
   mpu.initialize();
   //do
   {
     delay(500);
     // verify connection
-    PTLF("Testing connections...");
+    PTLF("Test connection");
     PTL(mpu.testConnection() ? F("MPU successful") : F("MPU failed"));//sometimes it shows "failed" but is ok to bypass.
   } //while (!mpu.testConnection());
 
   // load and configure the DMP
   do {
-    PTLF("Initializing DMP...");
+    PTLF("Initialize DMP");
     devStatus = mpu.dmpInitialize();
     delay(500);
     // supply your own gyro offsets here, scaled for min sensitivity
@@ -328,11 +330,11 @@ void setup() {
     // make sure it worked (returns 0 if so)
     if (devStatus == 0) {
       // turn on the DMP, now that it's ready
-      PTLF("Enabling DMP...");
+      PTLF("Enable DMP");
       mpu.setDMPEnabled(true);
 
       // enable Arduino interrupt detection
-      PTLF("Enabling interrupt detection");
+      PTLF("Enable interrupt");
       attachInterrupt(INTERRUPT, dmpDataReady, RISING);
       mpuIntStatus = mpu.getIntStatus();
 
@@ -533,7 +535,7 @@ void loop() {
       // this block handles argumentless tokens
       switch (token) {
         case 'h': {
-            PTLF("** Help Information **");// print the help document
+            PTLF("* Help Info *");// print the help document. not implemented on NyBoard Vo due to limited space
             break;
           }
         case 'd': {
@@ -560,8 +562,8 @@ void loop() {
         // this block handles array like arguments
         case 'i': //indexed joint motions: joint0, angle0, joint1, angle1, ...
         case 'l': //list of all 16 joint: angle0, angle2,... angle15
-        case 'o': //for melody
-        {
+          //case 'o': //for melody
+          {
             String inBuffer = Serial.readStringUntil('~');
             int8_t numArg = inBuffer.length();
             char* list = inBuffer.c_str();
@@ -583,7 +585,7 @@ void loop() {
         case 'm': //move joint to angle
         case 'u': //meow (repeat, increament)
         case 'b': //beep(tone, duration): tone 0 is pause, duration range is 0~255
-        {
+          {
             int8_t target[2] = {};
             String inBuffer = Serial.readStringUntil('\n');
             byte inLen = 0;
@@ -596,7 +598,6 @@ void loop() {
               pch = strtok (NULL, " ,");
               inLen++;
             }
-
             if (token == 'c') {
               //PTLF("calibrating [ targetIdx, angle ]: ");
               if (strcmp(lastCmd, "c")) { //first time entering the calibration function
@@ -613,14 +614,13 @@ void loop() {
               PTL();
               printList(servoCalibs);
               yield();
-
             }
             else if (token == 'm') {
               //SPF("moving [ targetIdx, angle ]: ");
               motion.dutyAngles[target[0]] = currentAng[target[0]] = target[1];
             }
             else if (token == 'u') {
-              meow(target[1], 0, 50, 200, 1+target[0]);
+              meow(target[0], 0, 50, 200, 1 + target[1]);
             }
             else if (token == 'b') {
               beep(target[0], (byte)target[1]);
