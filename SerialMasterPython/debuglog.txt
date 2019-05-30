@@ -27,4 +27,7 @@ Testing wrapper() with schedule
 
     Beep works
 
-There might be a bug in 'k'
+    'k balance' doesn't work
+
+
+There might be a bug in 'k' in arduino code
