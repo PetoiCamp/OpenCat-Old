@@ -1,6 +1,6 @@
 ## Arduino Pro or Pro Mini (5V, 20 MHz) w/ ATmega328P
 ## --------------------------------------------------
-nyboard01.name=ATmega328P (5V, 20 MHz) NyBoard
+nyboard01.name=ATmega328P (5V, 20 MHz) NyBoard V0_1
 
 nyboard01.upload.tool=arduino:avrdude
 nyboard01.upload.protocol=arduino
