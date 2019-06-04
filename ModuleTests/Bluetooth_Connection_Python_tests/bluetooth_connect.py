@@ -1,0 +1,13 @@
+import serial
+
+ser=serial.Serial("/dev/rfcomm0",57600)
+
+t=0
+while(t<20000):
+    if(t%10==0):
+        print t
+    t+=1
+
+ser.write("d")
+
+#ser.close()
