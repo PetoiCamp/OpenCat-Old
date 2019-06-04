@@ -22,7 +22,7 @@
           "checksum": "SHA-256:78815fc78fdba0bd45c2079dce2be8c290a7e83d40dceba14f0f8ee301a402c8",
           "size": "2587",
           "boards": [
-            {"name": "ATmega328P (5V, 20 MHz) NyBoard"}
+            {"name": "ATmega328P (5V, 20 MHz) NyBoard V0_1"}
           ],
           "toolsDependencies": [
             { "packager": "arduino", "name": "avr-gcc", "version": "4.8.1-arduino5" },
