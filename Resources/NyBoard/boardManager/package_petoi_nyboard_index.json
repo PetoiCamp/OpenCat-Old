@@ -17,7 +17,7 @@
           "help": {
             "online": "https://www.petoi.com/forum/"
           },
-          "url": "https://raw.githubusercontent.com/PetoiCamp/OpenCat/boardManager/Resources/NyBoard/boardManager/NyBoard-0.1.0.tar.bz2",
+          "url": "https://raw.githubusercontent.com/PetoiCamp/OpenCat/master/Resources/NyBoard/boardManager/NyBoard-0.1.0.tar.bz2",
           "archiveFileName": "NyBoard-0.1.0.tar.bz2",
           "checksum": "SHA-256:78815fc78fdba0bd45c2079dce2be8c290a7e83d40dceba14f0f8ee301a402c8",
           "size": "2587",
