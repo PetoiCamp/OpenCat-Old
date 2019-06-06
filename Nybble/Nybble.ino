@@ -538,14 +538,6 @@ void loop() {
             PTLF("* Help Info *");// print the help document. not implemented on NyBoard Vo due to limited space
             break;
           }
-        case 'd': {
-            motion.loadBySkillName("rest");
-            transform( motion.dutyAngles);
-            PTLF("shut down servos");
-            shutServos();
-            break;
-          }
-
         case 's': {
             PTLF("save calibration");
             saveCalib(servoCalibs);
@@ -554,7 +546,7 @@ void loop() {
         case 'a': {
             PTLF("abort calibration");
             for (byte i = 0; i < DOF; i++) {
-              servoCalibs[i] = servoCalib( i);
+              servoCalibs[i] = servoCalib(i);
             }
             break;
           }
@@ -562,6 +554,7 @@ void loop() {
         // this block handles array like arguments
         case 'i': //indexed joint motions: joint0, angle0, joint1, angle1, ...
         case 'l': //list of all 16 joint: angle0, angle2,... angle15
+        case 'd':
           //case 'o': //for melody
           {
             String inBuffer = Serial.readStringUntil('~');
@@ -575,6 +568,18 @@ void loop() {
             else if (token == 'l') {
               allCalibratedPWM(list);
             }
+            else if(token == 'd')
+            {
+              PTL(numArg);
+              if(numArg==0)
+              {
+                motion.loadBySkillName("rest");
+                transform(motion.dutyAngles);
+                shutServos();
+              }
+              else{shutServos2(list,numArg);}
+            }
+            
             break;
           }
         case 'j': { //show the list of current joint anles

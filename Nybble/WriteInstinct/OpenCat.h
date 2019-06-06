@@ -670,7 +670,15 @@ void shutServos() {
     pwm.setPWM(i, 0, 4096);
   }
 }
-
+void shutServos2(char* target_joints,int8_t numArg) {
+    if(((int8_t)target_joints[0])==16){shutServos();}
+    else{
+      for (int8_t i = 0; i < numArg; i++)
+      {PTL(int8_t(target_joints[i])-40);
+      pwm.setPWM(int8_t(target_joints[i])-40,0, 4096);
+      delay(5000);}
+    }
+}
 void transform( char * target,  float speedRatio = 1, byte offset = 0) {
   char *diff = new char[DOF - offset], maxDiff = 0;
   for (byte i = offset; i < DOF; i++) {

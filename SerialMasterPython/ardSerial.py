@@ -14,9 +14,9 @@ def wrapper(port,task):  #Structure of task is [token, var=[], time]
     else:
         serialWriteByte(port,task[1])
     time.sleep(task[-1])
-    
+
 def serialWriteNumToByte(port,token,var=[]): # Only to be used for c m u b i l o within Python
-    if token == 'l' or token=='i':
+    if token == 'l' or token=='i' or  token=='d':
         var=list(map(lambda x:int(x), var))
         instrStr=token+struct.pack('b' * len(var), *var)+'~'
     elif token =='c' or token =='m' or token =='u' or token =='b':
@@ -29,11 +29,13 @@ def serialWriteByte(port,var=[]):
         instrStr=""
         for element in var:
             instrStr=instrStr +element+" "
-    elif token == 'l' or token=='i' :
+    elif token == 'l' or token=='i' or token=='d':
         if(len(var[0])>1):
             var.insert(1,var[0][1:])       
         var[1:]=list(map(lambda x:int(x), var[1:]))
         instrStr = token+struct.pack('b' * len(var[1:]), *var[1:])+'~'
+        # print "d reached"
+        # print len(instrStr)
     elif token == 'w' or token == 'k':#['k',balance'] 
         if(len(var)==2):
             instrStr= var[0] + var[1]+"\n" #handles the case when there's space between k and skill name
