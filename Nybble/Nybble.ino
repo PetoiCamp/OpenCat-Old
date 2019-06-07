@@ -1,4 +1,4 @@
-/* Main Arduino sketch for Nybble, the walking robot kitten.
+tat/* Main Arduino sketch for Nybble, the walking robot kitten.
    Updates should be posted on GitHub: https://github.com/PetoiCamp/OpenCat
 
    Rongzhong Li

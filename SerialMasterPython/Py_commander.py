@@ -32,30 +32,35 @@ def Port_Opener(key):
     return port
 
 
-def Port_Closer(key):
+def Port_Closer(key,port):
+    '''
+    Only the Bluetooth connection case needs to be handled. If not disconnected properly, the bluetooth device will think that it 
+    is still connected to the PC even though it might not be.
+    '''
     if key=="Bluetooth":
         port.close()
         os.system("sudo rfcomm release 0 00:18:E4:40:00:06") #bluetooth mac address of the device
+        print "Bluetooth Port Successfully Closed"
 
 if __name__ == '__main__':#1,9,13
+    try:
         if len(sys.argv)==1:
             try:
                 port=Port_Opener("Bluetooth");
                 schedule = [['kwk',5],\
-                            ['d',[8],10],\
+                            ['d',5],\
                             ['kwk',5]]
                 for task in schedule:
-                    print task[0]
                     wrapper(port,task)
-                Port_Closer("Bluetooth");
-            except Exception as a:
-                print(a)
-                os.system("sudo python2 Emergency_port_closer.py")
-                print("There is some problem with port connectivity.\nProgram shut down\n Good hunting :)")
+                Port_Closer("Bluetooth",port);
         else:
             port=Port_Opener(sys.argv[1])
             if len(sys.argv)==3:
                 wrapper(port,[sys.argv[2],0]) #wrapper(port,[token, time])
             else:
                 wrapper(port,[sys.argv[2][0],sys.argv[2:],0]) #wrapper(port,[token,['m','2','1'],time])....wrapper(['k',['k','balance'],0])
-            Port_Closer(sys.argv[1])
+            Port_Closer(sys.argv[1],port)
+    except Exception as a:
+        print(a)
+        os.system("sudo python2 Emergency_port_closer.py")
+        print("There is some problem with port connectivity.\nProgram shut down\n Good hunting :)")

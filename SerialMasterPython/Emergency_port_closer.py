@@ -2,7 +2,7 @@ import serial
 import os
 
 #Assumes that rfcomm was already bound to the mac address of the usb device 
-
+# os.system("sudo rfcomm bind 0 00:18:E4:40:00:06")
 #Opening and Closing the serial channel from python
 port = serial.Serial(port='/dev/rfcomm0',baudrate=57600,parity=serial.PARITY_NONE,stopbits=serial.STOPBITS_ONE,bytesize=serial.EIGHTBITS,timeout=1)
 port.close()

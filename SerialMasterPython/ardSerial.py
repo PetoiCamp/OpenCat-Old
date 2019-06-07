@@ -7,16 +7,18 @@ import math
 import numpy as np
 
 def wrapper(port,task):  #Structure of task is [token, var=[], time]
+    print 'task '+str(task)+'\n'
     if len(task)==2:
         serialWriteByte(port,[task[0]])
     elif isinstance(task[1][0],int):
         serialWriteNumToByte(port,task[0],task[1])
     else:
         serialWriteByte(port,task[1])
+    print "task[-1]: "+str(task[-1])
     time.sleep(task[-1])
 
 def serialWriteNumToByte(port,token,var=[]): # Only to be used for c m u b i l o within Python
-    if token == 'l' or token=='i' or  token=='d':
+    if token == 'l' or token=='i':# or  token=='d':
         var=list(map(lambda x:int(x), var))
         instrStr=token+struct.pack('b' * len(var), *var)+'~'
     elif token =='c' or token =='m' or token =='u' or token =='b':
@@ -29,7 +31,7 @@ def serialWriteByte(port,var=[]):
         instrStr=""
         for element in var:
             instrStr=instrStr +element+" "
-    elif token == 'l' or token=='i' or token=='d':
+    elif token == 'l' or token=='i':#d or token=='d':
         if(len(var[0])>1):
             var.insert(1,var[0][1:])       
         var[1:]=list(map(lambda x:int(x), var[1:]))
@@ -42,7 +44,8 @@ def serialWriteByte(port,var=[]):
         else:
             instrStr = var[0] + '\n'
     else:
-        instrStr = token
+        instrStr = token+'~'
+    print "instrStr "+instrStr  
     port.write(instrStr)
 
 if __name__ == '__main__':
@@ -66,7 +69,6 @@ if __name__ == '__main__':
                 print (a)
                 serialWriteByte(port,["ksit"])
                 time.sleep(0.04)
-
     while True:
         time.sleep(0.01)
         counter=counter+1
