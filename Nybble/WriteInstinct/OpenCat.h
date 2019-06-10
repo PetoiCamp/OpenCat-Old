@@ -102,7 +102,7 @@
 float farTime =  LONGEST_DISTANCE * 2 / 0.034;
 #endif
 
-void beep(byte note, float duration = 10, int pause = 0, byte repeat = 1 ) {
+void beep(int8_t note, float duration = 10, int pause = 0, byte repeat = 1 ) {
   if (note == 0) {//rest note
     analogWrite(BUZZER, 0);
     delay(duration);
@@ -127,15 +127,15 @@ void playMelody(int start) {
     beep(EEPROM.read(start - 1 - i), 1000 / EEPROM.read(start - 1 - len - i), 100);
 }
 
-void meow(int repeat = 1, int pause = 200, int startF = 50,  int endF = 200, int increment = 5) {
-  for (int r = 0; r < repeat; r++) {
+void meow(int repeat = 0, int pause = 200, int startF = 50,  int endF = 200, int increment = 5) {
+  for (int r = 0; r < repeat + 1; r++) {
     for (int amp = startF; amp <= endF; amp += increment) {
       analogWrite(BUZZER, amp);
       delay(15); // wait for 15 milliseconds to allow the buzzer to vibrate
     }
-    delay(500);
+    delay(100 + 500 / increment);
     analogWrite(BUZZER, 0);
-    delay(pause);
+    if (repeat)delay(pause);
   }
 }
 
@@ -249,9 +249,9 @@ float radPerDeg = M_PI / 180;
 
 // tone: pause,1,  2,  3,  4,  5,  6,  7,  1,  2, 3,
 // code: 0,    1,  3,  5,  6,  8,  10, 12, 13, 15, 17
-byte melody[] = {8, 13, 10, 13, 8,  0,  5,  8,  3,  5, 8,
-                 8, 8,  32, 32, 8, 32, 32, 32, 32, 32, 8,
-                };
+int8_t melody[] = {8, 13, 10, 13, 8,  0,  5,  8,  3,  5, 8,
+                   8, 8,  32, 32, 8, 32, 32, 32, 32, 32, 8,
+                  };
 /*byte pins[] = {16, 16, 16, 16,
                16, 16, 16, 16,
                2, 3, 13, 12,
@@ -670,7 +670,15 @@ void shutServos() {
     pwm.setPWM(i, 0, 4096);
   }
 }
-
+void shutServos2(char* target_joints,int8_t numArg) {
+    if(((int8_t)target_joints[0])==16){shutServos();}
+    else{
+      for (int8_t i = 0; i < numArg; i++)
+      {PTL(int8_t(target_joints[i])-40);
+      pwm.setPWM(int8_t(target_joints[i])-40,0, 4096);
+      delay(5000);}
+    }
+}
 void transform( char * target,  float speedRatio = 1, byte offset = 0) {
   char *diff = new char[DOF - offset], maxDiff = 0;
   for (byte i = offset; i < DOF; i++) {
@@ -704,10 +712,10 @@ template <typename T> int8_t sign(T val) {
 }
 
 template <typename T> void printList(T * arr, byte len = DOF) {
-  String temp="";
+  String temp = "";
   for (byte i = 0; i < len; i++) {
-    temp+=String(arr[i]);
-    temp+='\t';
+    temp += String(arr[i]);
+    temp += '\t';
     //PT((T)(arr[i]));
     //PT('\t');
   }
