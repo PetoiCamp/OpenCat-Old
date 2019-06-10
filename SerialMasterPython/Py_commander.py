@@ -45,14 +45,13 @@ def Port_Closer(key,port):
 if __name__ == '__main__':#1,9,13
     try:
         if len(sys.argv)==1:
-            try:
-                port=Port_Opener("Bluetooth");
-                schedule = [['kwk',5],\
-                            ['d',5],\
-                            ['kwk',5]]
-                for task in schedule:
-                    wrapper(port,task)
-                Port_Closer("Bluetooth",port);
+            port=Port_Opener("Bluetooth");
+            schedule = [['kwk',5],\
+                        ['ksit',5],\
+                        ['kwk',5]]
+            for task in schedule:
+                wrapper(port,task)
+            Port_Closer("Bluetooth",port);
         else:
             port=Port_Opener(sys.argv[1])
             if len(sys.argv)==3:

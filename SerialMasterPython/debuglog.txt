@@ -31,13 +31,9 @@ Testing wrapper() with schedule
 
 There might be a bug in 'k' in arduino code
 
-
-
 Need to specify in the Py_commander to only call the emergency port closure if a bluetooth connection
-has benn used.
-
+has been used.
 
 Significant changes made to Py_commander, emergency_port_closure, and Voice_commander. Need to be tested.
-
 
 In the ardSerial maybe we could better combine those two functions.
