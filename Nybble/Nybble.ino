@@ -1,4 +1,4 @@
-tat/* Main Arduino sketch for Nybble, the walking robot kitten.
+/* Main Arduino sketch for Nybble, the walking robot kitten.
    Updates should be posted on GitHub: https://github.com/PetoiCamp/OpenCat
 
    Rongzhong Li
@@ -228,9 +228,20 @@ void checkBodyMotion()  {
       ypr[1] = -ypr[1] ;
 #endif
 #endif
-      /*PT(ypr[1] * degPerRad);
-        PTF("\t");
-        PTL(ypr[2] * degPerRad);*/
+        PT('g');
+        PTF(" ");
+        PT(ypr[1] * degPerRad);
+//        PTF(" ");
+//        PTL(ypr[2] * degPerRad);
+        PTF(" ");
+        PTL('\n');
+
+        
+        PT('l');
+        for(int8_t i=8;i<16;i++)
+        {PT(currentAng[i]);}
+        PTL('~');
+      
       // overflow is detected after the ypr is read. it's necessary to keep a lag recrod of previous reading.  -- RzLi --
 #ifdef FIX_OVERFLOW
       for (byte g = 0; g < 2; g++) {
@@ -433,7 +444,7 @@ void loop() {
   float voltage = analogRead(BATT);
   if (voltage <
 #ifdef NyBoard_V0_1
-      650
+      0
 #else
       300
 #endif
@@ -487,25 +498,25 @@ void loop() {
           transform( motion.dutyAngles);
           strcpy(newCmd, "rest");
         }
-        else if (!strcmp(newCmd, "rc")) {
-          char **bList = new char*[10];
-          bList[0] = "rc1";
-          bList[1] = "rc2";
-          bList[2] = "rc3";
-          bList[3] = "rc4";
-          bList[4] = "rc5";
-          bList[5] = "rc6";
-          bList[6] = "rc7";
-          bList[7] = "rc8";
-          bList[8] = "rc9";
-          bList[9] = "rc10";
-          float speedRatio[10] = {2, 2, 2, 10, 5, 10, 5, 5, 5, 2};
-          int pause[10] = {500, 500, 500, 0, 0, 0, 0, 0, 0, 0};
-          behavior( 10, bList, speedRatio, pause);
-          strcpy(newCmd, "rest");
-          delete []bList;
-
-        }
+//        else if (!strcmp(newCmd, "rc")) {
+//          char **bList = new char*[10];
+//          bList[0] = "rc1";
+//          bList[1] = "rc2";
+//          bList[2] = "rc3";
+//          bList[3] = "rc4";
+//          bList[4] = "rc5";
+//          bList[5] = "rc6";
+//          bList[6] = "rc7";
+//          bList[7] = "rc8";
+//          bList[8] = "rc9";
+//          bList[9] = "rc10";
+//          float speedRatio[10] = {2, 2, 2, 10, 5, 10, 5, 5, 5, 2};
+//          int pause[10] = {500, 500, 500, 0, 0, 0, 0, 0, 0, 0};
+//          behavior( 10, bList, speedRatio, pause);
+//          strcpy(newCmd, "rest");
+//          delete []bList;
+//
+//        }
         else if (!strcmp(newCmd, "pu")) {
           char **bList = new char*[2];
           bList[0] = "pu1";

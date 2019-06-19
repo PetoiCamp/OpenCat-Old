@@ -40,7 +40,6 @@ def Fuzzy_help(st):
     List_of_possible_commands=[]
     print len(st)
 
-
     for element in st:
         List_of_possible_commands.append(process.extractOne(element,Valid_words))
 
