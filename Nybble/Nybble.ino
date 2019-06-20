@@ -230,17 +230,9 @@ void checkBodyMotion()  {
 #endif
         PT('g');
         PTF(" ");
-        PT(ypr[1] * degPerRad);
+        PTL(ypr[1] * degPerRad);
 //        PTF(" ");
 //        PTL(ypr[2] * degPerRad);
-        PTF(" ");
-        PTL('\n');
-
-        
-        PT('l');
-        for(int8_t i=8;i<16;i++)
-        {PT(currentAng[i]);}
-        PTL('~');
       
       // overflow is detected after the ypr is read. it's necessary to keep a lag recrod of previous reading.  -- RzLi --
 #ifdef FIX_OVERFLOW
@@ -438,6 +430,7 @@ void setup() {
     Serial.println(" cm");
   }
   meow();
+//  delay(3000);
 }
 
 void loop() {
@@ -747,6 +740,10 @@ void loop() {
         }
         jointIdx++;
       }
+      PT('l');
+      for(int8_t i=8;i<16;i++)
+      {PT(currentAng[i]);}
+      PTL('~');
     }
   }
 }
