@@ -8,7 +8,7 @@ Adds the NyBoard board definition through the *Arduino 1.6.4 (and later)* board 
 
 2. Open the `Preferences...` panel
 
-3. In the `Additional Boards Manager URLs` field, add `https://raw.githubusercontent.com/PetoiCamp/OpenCat/boardManagerSupport/Resources/NyBoard/boardManager/package_petoi_nyboard_index.json`. If there are already URLs listed in this field, separate them with commas or click on the icon next to the field to open up an editor and add this URL to a new line.
+3. In the `Additional Boards Manager URLs` field, add `https://raw.githubusercontent.com/PetoiCamp/OpenCat/master/Resources/NyBoard/boardManager/package_petoi_nyboard_index.json`. If there are already URLs listed in this field, separate them with commas or click on the icon next to the field to open up an editor and add this URL to a new line.
 
 4. Click on the `OK` button to close the `Preferences...` panel (you may need to do this for the `Additional Boards Manager URLs` editor first, if you opened it up in the previous step)
 
