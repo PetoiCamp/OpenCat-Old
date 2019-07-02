@@ -40,7 +40,7 @@ def Port_Closer(key,port):
     if key=="Bluetooth":
         port.close()
         os.system("sudo rfcomm release 0 00:18:E4:40:00:06") #bluetooth mac address of the device
-        print "Bluetooth Port Successfully Closed"
+        print ("Bluetooth Port Successfully Closed")
 
 if __name__ == '__main__':#1,9,13
     try:

@@ -28,7 +28,7 @@ def voice_recorder(mic,recognizeer):
     with mic as source:
         recognizeer.adjust_for_ambient_noise(mic,duration=0.5)
         port.write('b 100 100') #command to start working
-        time.sleep(0.1)
+#        time.sleep(0.1)
         audio = recognizeer.record(source,duration=2.2)
         return audio
 
@@ -56,11 +56,7 @@ def classifier(audio, recognizeer):
     '''
     try:
         words=recognizeer.recognize_google(audio_data=audio)    
-        print words
-
         st_set=Fuzzy_help(words)
-
-        print "Max value: "+str(st_set)
         st=st_set[0]
 
         cmd=["not valid",0.0]
@@ -82,10 +78,10 @@ def classifier(audio, recognizeer):
             cmd=['khi',0.0]
         return cmd
     except sr.UnknownValueError:
-        print "Either nothing was recorded or we didnt understand what you said. Please repeat"
+        print ("Either nothing was recorded or we didnt understand what you said. Please repeat")
         return "Exception"
     except sr.RequestError:
-        print "Either your API requests aren't working or you ran out of them for the day"
+        print ("Either your API requests aren't working or you ran out of them for the day")
     else:
         return ['d',0]
 
@@ -111,7 +107,7 @@ def commander(mic,recogniseer,waker):
 
 
 if __name__ == '__main__':
-    port=Port_Opener("Bluetooth");
+    port=Port_Opener("UsbSerial");
 
     mic=mic_opener();
     r=recogniser();

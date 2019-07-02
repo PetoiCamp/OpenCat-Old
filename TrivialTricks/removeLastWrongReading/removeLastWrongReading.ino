@@ -37,13 +37,18 @@
 int reading = 0;
 char readLag[HISTORY];
 int lag = 0;
+
+bool isCorrect(char reading){
+  return reading>'7';
+  }
+  
 void setup() {
   Serial.begin(57600);
 }
 void loop() {
   if ( Serial.available() > 0) {
     reading = Serial.read();
-    if (reading > '7')
+    if (isCorrect(reading))
       reading = readLag[(lag - 1 + HISTORY) % HISTORY];
     else {
       readLag[lag] = reading;

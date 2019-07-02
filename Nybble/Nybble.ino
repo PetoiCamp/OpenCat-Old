@@ -246,9 +246,10 @@ void checkBodyMotion()  {
       //deal with accidents
       if (fabs(ypr[1])*degPerRad > LARGE_PITCH) {
 #ifdef DEVELOPER
+        PT('g');
+        PT(' ');
         PT(ypr[1] * degPerRad);
-        PTF("\t");
-        PTL(ypr[2] * degPerRad);
+        PTL();
 #endif
         if (!hold) {
           token = 'k';
@@ -740,10 +741,15 @@ void loop() {
         }
         jointIdx++;
       }
-      PT('l');
-      for(int8_t i=8;i<16;i++)
-      {PT(currentAng[i]);}
+     if (jointIdx == DOF)
+    { PT('l');
+      for (int8_t i = 8; i < 16; i++)
+      {
+        PT(char(i));
+        PT(currentAng[i]);
+      }
       PTL('~');
     }
   }
+}
 }
