@@ -693,7 +693,7 @@ void transform( char * target,  float speedRatio = 1, byte offset = 0) {
       delayMicroseconds(100);
     }
 
-//      checkBodyMotion();
+      checkBodyMotion();
       PT('l');
       for (int8_t i = 8; i < 16; i++)
       {PT(char(i));
