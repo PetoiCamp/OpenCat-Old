@@ -2,11 +2,11 @@
 import os
 import serial
 from ardSerial import *
-
+import time
 
 #keys UsbSerial might be different over differenet OS/computers
 #Bluetooth might have its can of worms over differeent OS that we didnt discover yet.tested only on Linux based operating systems
-port_reference_dictionary={"PiSocket":"ttyS0","Bluetooth":"rfcomm0","UsbSerial":"ttyUSB0"} 
+port_reference_dictionary={"PiSocket":"ttyS0","Bluetooth":"rfcomm0","usb":"ttyUSB0"} 
 
 def Port_Opener(key):
     '''
@@ -26,7 +26,6 @@ def Port_Opener(key):
                         stopbits=serial.STOPBITS_ONE,
                         bytesize=serial.EIGHTBITS,
                         timeout=1)
-
     if key=="Bluetooth": time.sleep(10)
 
     return port
@@ -45,13 +44,14 @@ def Port_Closer(key,port):
 if __name__ == '__main__':#1,9,13
     try:
         if len(sys.argv)==1:
-            port=Port_Opener("Bluetooth");
-            schedule = [['kwk',5],\
-                        ['ksit',5],\
+            port=Port_Opener("usb");
+            angle=50
+            schedule = [['i',[8,angle,9,angle,10,angle,11,angle,12,angle,13,angle,14,angle,15,angle],5],\
+#            schedule = [['m',[12,angle],5],\
                         ['kwk',5]]
             for task in schedule:
                 wrapper(port,task)
-            Port_Closer("Bluetooth",port);
+#            Port_Closer("Bluetooth",port);
         else:
             port=Port_Opener(sys.argv[1])
             if len(sys.argv)==3:

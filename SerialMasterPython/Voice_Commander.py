@@ -5,7 +5,6 @@ import serial
 from ardSerial import *
 from Py_commander import *
 import speech_recognition as sr
-import pocketsphinx
 from fuzzywuzzy import process
 from fuzzywuzzy import fuzz
 from operator import itemgetter
@@ -105,9 +104,8 @@ def commander(mic,recogniseer,waker):
             port.write('u0 10')
 
 
-
 if __name__ == '__main__':
-    port=Port_Opener("UsbSerial");
+    port=Port_Opener("usb");
 
     mic=mic_opener();
     r=recogniser();
@@ -115,4 +113,5 @@ if __name__ == '__main__':
     commander(mic,r,1)#wait for the cat to wake up`
     commander(mic,r,0)#wait for the cat to goto sleep
 
-    Port_Closer("Bluetooth",port);
+    #only to used when using a bluetooth port.
+#    Port_Closer("Bluetooth",port);
