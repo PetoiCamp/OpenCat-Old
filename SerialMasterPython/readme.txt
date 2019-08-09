@@ -7,8 +7,9 @@ The file names are listed below in the order of importance and later on with des
 1. ardSerial.py
 2. Py_Commander.py
 3. Voice_commander.py
-4. Serial Connections set up.py
-5. Emergency_port_closure.py
+4. vision_commader.py
+5. Serial Connections set up.py
+6. Emergency_port_closure.py
 
 The first 3 files have a moduler architecture and can be imported into other python files to increase their 
 functionalities. Py_Commander.py and Voice_commander.py import ardSerial.py to use it wrapper() and serial 
