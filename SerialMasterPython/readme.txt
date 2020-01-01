@@ -54,7 +54,7 @@ It will use the CMU sphinx system to do decoding of our audio.
 To run this file: "./Voice_Commander.py"
 
 4. vision_commader:
-    Please read the readme.txt here:    https://github.com/BigPapaZ/OpenCat_CV_elbow
+    Please read the readme.txt here:    https://github.com/Beep-Boop-Bopa/OpenCat_CV_elbow
 
 5. Serial Connections set up.py:
 
