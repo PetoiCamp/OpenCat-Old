@@ -261,7 +261,6 @@ void setup() {
 }
 
 void loop() {
-
   if (choice == 'Y') {
     if (stage == 0) {
       PTLF("\nReading sensors for first time...");

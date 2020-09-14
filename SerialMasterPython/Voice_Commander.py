@@ -5,7 +5,6 @@ import serial
 from ardSerial import *
 from Py_commander import *
 import speech_recognition as sr
-import pocketsphinx
 from fuzzywuzzy import process
 from fuzzywuzzy import fuzz
 from operator import itemgetter
@@ -28,7 +27,7 @@ def voice_recorder(mic,recognizeer):
     with mic as source:
         recognizeer.adjust_for_ambient_noise(mic,duration=0.5)
         port.write('b 100 100') #command to start working
-        time.sleep(0.1)
+#        time.sleep(0.1)
         audio = recognizeer.record(source,duration=2.2)
         return audio
 
@@ -39,7 +38,6 @@ def Fuzzy_help(st):
     st=st.lower().split();
     List_of_possible_commands=[]
     print len(st)
-
 
     for element in st:
         List_of_possible_commands.append(process.extractOne(element,Valid_words))
@@ -57,11 +55,7 @@ def classifier(audio, recognizeer):
     '''
     try:
         words=recognizeer.recognize_google(audio_data=audio)    
-        print words
-
         st_set=Fuzzy_help(words)
-
-        print "Max value: "+str(st_set)
         st=st_set[0]
 
         cmd=["not valid",0.0]
@@ -83,10 +77,10 @@ def classifier(audio, recognizeer):
             cmd=['khi',0.0]
         return cmd
     except sr.UnknownValueError:
-        print "Either nothing was recorded or we didnt understand what you said. Please repeat"
+        print ("Either nothing was recorded or we didnt understand what you said. Please repeat")
         return "Exception"
     except sr.RequestError:
-        print "Either your API requests aren't working or you ran out of them for the day"
+        print ("Either your API requests aren't working or you ran out of them for the day")
     else:
         return ['d',0]
 
@@ -110,9 +104,8 @@ def commander(mic,recogniseer,waker):
             port.write('u0 10')
 
 
-
 if __name__ == '__main__':
-    port=Port_Opener("Bluetooth");
+    port=Port_Opener("usb");
 
     mic=mic_opener();
     r=recogniser();
@@ -120,4 +113,5 @@ if __name__ == '__main__':
     commander(mic,r,1)#wait for the cat to wake up`
     commander(mic,r,0)#wait for the cat to goto sleep
 
-    Port_Closer("Bluetooth",port);
+    #only to used when using a bluetooth port.
+#    Port_Closer("Bluetooth",port);

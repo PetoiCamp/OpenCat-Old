@@ -1,4 +1,4 @@
-#define NyBoard_V0_1
+#define NyBoard_V0_2
 #define NYBBLE
 #define NUM_SKILLS 43
 #define I2C_EEPROM

@@ -101,7 +101,7 @@
 #define LONGEST_DISTANCE 200 // 200 cm = 2 meters
 float farTime =  LONGEST_DISTANCE * 2 / 0.034;
 #endif
-
+void checkBodyMotion();
 void beep(int8_t note, float duration = 10, int pause = 0, byte repeat = 1 ) {
   if (note == 0) {//rest note
     analogWrite(BUZZER, 0);
@@ -364,7 +364,6 @@ void copyDataFromPgmToI2cEeprom(unsigned int &eeAddress, unsigned int pgmAddress
       PTL("skill name: " + String(skillName) + ",\ton-board EEPROM address: " + String(onBoardEepromAddress));
     }
   };
-
   class SkillList: public QList<Skill*> {//the whole SkillList routine is replaced by Motion.loadBySkillName()
   public:
     Skill* dict(char* key) {
@@ -687,14 +686,21 @@ void transform( char * target,  float speedRatio = 1, byte offset = 0) {
   }
   byte steps = byte(round(maxDiff / 1.0/*degreeStep*/ / speedRatio));//default speed is 1 degree per step
   for (byte s = 0; s <= steps; s++)
+  {
     for (byte i = offset; i < DOF; i++) {
       float dutyAng = (target[i - offset] + (steps == 0 ? 0 : (1 + cos(M_PI * s / steps)) / 2 * diff[i - offset]));
       calibratedPWM(i,  dutyAng);
       delayMicroseconds(100);
     }
+
+      checkBodyMotion();
+      PT('l');
+      for (int8_t i = 8; i < 16; i++)
+      {PT(char(i));
+      PT(currentAng[i]);}    
+      PTL('~');
+  }
   delete [] diff;
-  //  printList(currentAng);
-  //  PTL();
 }
 
 void behavior(int n, char** skill, float *speedRatio, int *pause) {

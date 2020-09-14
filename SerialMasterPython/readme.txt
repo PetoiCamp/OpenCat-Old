@@ -7,8 +7,9 @@ The file names are listed below in the order of importance and later on with des
 1. ardSerial.py
 2. Py_Commander.py
 3. Voice_commander.py
-4. Serial Connections set up.py
-5. Emergency_port_closure.py
+4. vision_commader.py
+5. Serial Connections set up.py
+6. Emergency_port_closure.py
 
 The first 3 files have a moduler architecture and can be imported into other python files to increase their 
 functionalities. Py_Commander.py and Voice_commander.py import ardSerial.py to use it wrapper() and serial 
@@ -52,12 +53,15 @@ It will use the CMU sphinx system to do decoding of our audio.
 
 To run this file: "./Voice_Commander.py"
 
-4. Serial Connections set up.py:
+4. vision_commader:
+    Please read the readme.txt here:    https://github.com/Beep-Boop-Bopa/OpenCat_CV_elbow
+
+5. Serial Connections set up.py:
 
 Please run this file before anything else and follow the instructions. Different computers will have different 
 serial port names. It is meant to help one identify those names and set them up properly.
 
-5. Emergency_port_closure.py:
+6. Emergency_port_closure.py:
 
 This file is meant to help one safely close the bluetooth serial port in case of a problem. 
 Might not solve the issues and you might have to restart the computer.
