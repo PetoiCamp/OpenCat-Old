@@ -1,5 +1,8 @@
 # OpenCat
-**News: Our crowdfunding campaign is live on www.igg.me/at/nybble !**
+
+**This repository for Nybble is too redundent with large image files and is now obsolete. Please visit our [new repository for OpenCat](https://github.com/PetoiCamp/OpenCat) that works for both Nybble and Bittle!**
+
+--
 
 This is the repository for OpenCat project. 
 
