@@ -2,6 +2,10 @@
 
 **This repository for Nybble is too redundent with large image files and is now obsolete. Please visit our [new repository for OpenCat](https://github.com/PetoiCamp/OpenCat) that works for both Nybble and Bittle!**
 
+![](https://github.com/PetoiCamp/NonCodeFiles/blob/master/gif/run.gif?raw=true)
+
+![](https://github.com/PetoiCamp/NonCodeFiles/blob/master/gif/ball.gif?raw=true)
+
 --
 
 This is the repository for OpenCat project. 
