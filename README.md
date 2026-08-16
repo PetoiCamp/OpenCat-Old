@@ -1,6 +1,6 @@
 # OpenCat
 
-**This repository for Nybble is too redundent with large image files and is now obsolete. Please visit our [new repository for OpenCat](https://github.com/PetoiCamp/OpenCat) that works for both Nybble and Bittle! For the latest OpenCat robots (Bittle X, Nybble Q), see [OpenCatESP32](https://github.com/PetoiCamp/OpenCatEsp32-Quadruped-Robot).**
+**This repository for Nybble is too redundent with large image files and is now obsolete. Please visit our [new repository for OpenCat](https://github.com/PetoiCamp/OpenCat) that works for both Nybble and Bittle! For the latest OpenCat robots (Bittle X, Nybble Q), see [OpenCatESP32](https://github.com/PetoiCamp/OpenCatEsp32-Quadruped-Robot), or buy [Bittle X on Amazon](https://www.amazon.com/dp/B0FNT6TSVT?utm_source=github&utm_medium=code&utm_campaign=github-opencat&utm_content=old-readme-amazon-buy-link).**
 
 ![](https://github.com/PetoiCamp/NonCodeFiles/blob/master/gif/run.gif?raw=true)
 
