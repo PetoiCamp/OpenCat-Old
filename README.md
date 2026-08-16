@@ -36,6 +36,6 @@ In the **Wiki** tab, there's a slow documenting process going on.
 
 We just acquired our official domain: www.petoi.com. You can subscribe for our official newsletters.
 
-Random updates will be posted on Twitter [@PetoiCamp](https://twitter.com/petoicamp), Instagram [@petoicamp](https://www.instagram.com/petoicamp/), and [YouTube channel](https://www.youtube.com/@petoicamp)
+Random updates will be posted on Twitter [@PetoiCamp](https://twitter.com/petoicamp?utm_source=github&utm_medium=code&utm_campaign=github-opencat&utm_content=old-readme-twitter-follow), Instagram [@petoicamp](https://www.instagram.com/petoicamp/?utm_source=github&utm_medium=code&utm_campaign=github-opencat&utm_content=old-readme-instagram-follow), and [YouTube channel](https://www.youtube.com/@petoicamp?utm_source=github&utm_medium=code&utm_campaign=github-opencat&utm_content=old-readme-youtube-follow)
 
 
