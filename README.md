@@ -17,7 +17,7 @@ OpenCat robots are used for hands-on **physical AI education** and real-world **
 ## Quaddle mini robot dog — launching on Kickstarter Sept 2, 2026
 ![](https://github.com/PetoiCamp/NonCodeFiles/blob/master/gif/quaddleCover.gif?raw=true)
 
-[Quaddle](https://www.kickstarter.com/projects/petoi/quaddle-open-source-desktop-robot-kit/?ref=github_opencat_quaddle-section&utm_source=github&utm_medium=code&utm_campaign=github-opencat&utm_content=old-readme-quaddle-section) is Petoi's newest quadruped, **going live on Kickstarter Sept 2, 2026** — a mini desk robot built on the same OpenCat lineage as Bittle and Nybble.
+[Quaddle](https://www.kickstarter.com/projects/petoi/quaddle-open-source-desktop-robot-kit/?ref=cxyp0o&utm_source=github&utm_medium=code&utm_campaign=github-opencat&utm_content=old-readme-quaddle-section) is Petoi's newest quadruped, **going live on Kickstarter Sept 2, 2026** — a mini desk robot built on the same OpenCat lineage as Bittle and Nybble.
 
 - Full quadruped running on just **4 servos** instead of the usual 8–12, which forces genuinely different gait-design and leg-coordination solutions to still get all four legs walking, running, and balancing
 - Position-feedback servos — readable, not just drivable — which is what makes **Puppet Mode** possible: hand-guide the legs and record a motion directly, no code required
@@ -27,8 +27,8 @@ OpenCat robots are used for hands-on **physical AI education** and real-world **
 
 **Source code is not yet public.** It's an upgraded version of the OpenCat project. Its ESP32-S3 code structure is closer to [OpenCatESP32](https://github.com/PetoiCamp/OpenCatEsp32-Quadruped-Robot), which already powers thousands of Bittle X and Nybble Q robots in the field, than to this legacy repo. We plan to open source it before Quaddle delivery.
 
-- Watch [r/petoi](https://www.reddit.com/r/Petoi/) and [Discord](https://discord.com/invite/ckdu23q8nr) for the open-source announcement
-- [Get notified on Kickstarter](https://www.kickstarter.com/projects/petoi/quaddle-open-source-desktop-robot-kit/?ref=github_opencat_notify-link&utm_source=github&utm_medium=code&utm_campaign=github-opencat&utm_content=old-readme-notify-link) when it goes live
+- Watch [r/petoi](https://www.reddit.com/r/Petoi/) for the open-source announcement
+- [Get notified on Kickstarter](https://www.kickstarter.com/projects/petoi/quaddle-open-source-desktop-robot-kit/?ref=cxyp0o&utm_source=github&utm_medium=code&utm_campaign=github-opencat&utm_content=old-readme-notify-link) when it goes live
 - Check out the [Quaddle Hugging Face page](https://huggingface.co/petoi/quaddle)
 
 ## About the Founder & Track Record
