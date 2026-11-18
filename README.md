@@ -1,6 +1,6 @@
 # OpenCat
 
-**This repository for Nybble is too redundent with large image files and is now obsolete. Please visit our [new repository for OpenCat](https://github.com/PetoiCamp/OpenCat) that works for both Nybble and Bittle! For the latest OpenCat robots (Bittle X, Nybble Q), see [OpenCatESP32](https://github.com/PetoiCamp/OpenCatEsp32-Quadruped-Robot), or buy [Bittle X on Petoi.com](https://www.petoi.com/shop?utm_source=github&utm_medium=code&utm_campaign=github-opencat&utm_content=old-readme-shop-buy-link).**
+**This repository for Nybble is too redundent with large image files and is now obsolete. Please visit our [new repository for OpenCat](https://github.com/PetoiCamp/OpenCat) that works for both Nybble and Bittle! For the latest OpenCat robots (Bittle X, Nybble Q), see [OpenCatESP32](https://github.com/PetoiCamp/OpenCatEsp32-Quadruped-Robot), or buy [Petoi robots on Petoi.com](https://www.petoi.com/store?utm_source=github&utm_medium=code&utm_campaign=github-opencat&utm_content=old-readme-shop-buy-link).**
 
 ![](https://github.com/PetoiCamp/NonCodeFiles/blob/master/gif/run.gif?raw=true)
 
@@ -12,7 +12,7 @@ This is the repository for OpenCat project.
 
 The goal is to collaborate talents for this cute quadruped mini robot kit. It's still a complex system only for skilled makers, yet we want to share it with the public by mass production and bringing down the cost. 
 
-OpenCat robots are used for hands-on **physical AI education** and real-world **physical AI applications** — from K-12 robotics classrooms to university research labs — not just screen-based coding exercises.
+OpenCat robots are used for hands-on **[physical AI education](https://www.petoi.com/pages/quadruped-physical-ai?utm_source=github&utm_medium=code&utm_campaign=github-opencat&utm_content=old-readme-physical-ai)** and real-world **physical AI applications** — from K-12 robotics classrooms to university research labs — not just screen-based coding exercises.
 
 ## Quaddle mini robot dog — funded on Kickstarter, October 2026
 ![](https://github.com/PetoiCamp/NonCodeFiles/blob/master/gif/quaddleCover.gif?raw=true)
